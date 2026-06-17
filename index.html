@@ -974,6 +974,12 @@
       align-items: center;
       gap: 8px;
       margin-bottom: 8px;
+      position: sticky;
+      top: -1px;
+      z-index: 4;
+      padding: 0 0 7px;
+      background: linear-gradient(180deg, rgba(20,31,39,0.99), rgba(20,31,39,0.92));
+      backdrop-filter: blur(4px);
     }
 
     .backBtn {
@@ -1171,6 +1177,107 @@
       color: rgba(255,255,255,0.88);
       font-weight: 900;
       text-align: center;
+    }
+
+
+    .settingsTabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 9px;
+    }
+
+    .settingsTabBtn {
+      min-height: 34px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 11px;
+      background: rgba(255,255,255,0.065);
+      color: #e9f4f8;
+      font-size: 0.78rem;
+      font-weight: 1000;
+      cursor: pointer;
+    }
+
+    .settingsTabBtn.active {
+      color: #171100;
+      background: linear-gradient(180deg, rgba(240,202,104,0.98), rgba(240,202,104,0.78));
+      border-color: rgba(255,255,255,0.36);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.28), 0 0 0 2px rgba(240,202,104,0.12);
+    }
+
+    .settingsTabPanel { display: none; }
+    .settingsTabPanel.active { display: block; }
+
+    .sectionBox.collapsible {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .sectionHeader {
+      width: 100%;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 10px;
+      border: 0;
+      border-radius: 12px 12px 0 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.085), rgba(255,255,255,0.035));
+      color: var(--gold);
+      font-size: 0.8rem;
+      font-weight: 1000;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .sectionHeader small {
+      margin-left: auto;
+      color: #d9e5ea;
+      font-size: 0.62rem;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-transform: none;
+      opacity: .88;
+      white-space: nowrap;
+    }
+
+    .sectionHeader .chevron {
+      color: #fff2c8;
+      font-size: 0.92rem;
+      transform: rotate(0deg);
+      transition: transform 140ms ease;
+    }
+
+    .sectionHeader.collapsed .chevron { transform: rotate(-90deg); }
+
+    .sectionContent {
+      padding: 9px;
+      display: grid;
+      gap: 0;
+    }
+
+    .sectionContent.collapsed { display: none; }
+
+    .nestedSettingsBlock {
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 12px;
+      background: rgba(0,0,0,0.14);
+      overflow: hidden;
+      margin: 5px 0 7px;
+    }
+
+    .nestedSettingsBlock .sectionHeader {
+      min-height: 36px;
+      border-radius: 12px 12px 0 0;
+      background: rgba(255,255,255,0.055);
+      font-size: 0.72rem;
+    }
+
+    .nestedSettingsBlock .sectionContent {
+      padding: 8px;
     }
 
     .cardBackThumb[data-style="classic"],
@@ -1449,11 +1556,14 @@
     .stack.tableUnderlayHold::before {
       content: '';
       position: absolute;
-      inset: 7px 3px auto 3px;
+      left: 0;
+      top: 0;
+      width: var(--stack-card-w);
       height: var(--stack-card-h);
-      border: 1px dashed rgba(255,255,255,0.20);
-      border-radius: 7px;
+      border: 1px dashed rgba(255,255,255,0.28);
+      border-radius: clamp(4px, calc(var(--stack-card-w) * 0.14), 9px);
       background: rgba(255,255,255,0.035);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.045);
     }
 
     .stack.tableUnderlayHold .backCard {
@@ -1623,23 +1733,29 @@
       top: 50%;
       z-index: 9999;
       pointer-events: none;
-      transform: translate(-50%, -50%) scale(.88);
-      padding: 13px 23px;
+      transform: translate3d(-50%, -50%, 0) scale(.88);
+      min-height: 54px;
+      padding: 0 24px 2px;
       border-radius: 999px;
-      border: 1px solid rgba(240,202,104,.78);
-      background: radial-gradient(circle at 50% 30%, rgba(255,244,190,.22), rgba(20,12,38,.90) 62%, rgba(6,9,20,.94));
+      border: 1px solid rgba(240,202,104,.82);
+      background: radial-gradient(circle at 50% 30%, rgba(255,244,190,.24), rgba(20,12,38,.92) 62%, rgba(6,9,20,.96));
       color: #fff5c9;
-      font-size: clamp(1.35rem, 8vw, 2.2rem);
-      line-height: 1;
+      font-size: clamp(1.35rem, 8vw, 2.16rem);
+      line-height: .96;
       font-weight: 1000;
-      letter-spacing: .03em;
+      letter-spacing: .025em;
       text-transform: uppercase;
-      text-shadow: 0 2px 0 rgba(0,0,0,.48), 0 0 18px rgba(240,202,104,.82), 0 0 36px rgba(151,104,255,.50);
-      box-shadow: 0 0 0 2px rgba(240,202,104,.12), 0 15px 42px rgba(0,0,0,.55), 0 0 30px rgba(240,202,104,.40), inset 0 0 20px rgba(255,255,255,.06);
+      text-align: center;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-shadow: 0 2px 0 rgba(0,0,0,.48), 0 0 14px rgba(240,202,104,.74), 0 0 28px rgba(151,104,255,.44);
+      box-shadow: 0 0 0 2px rgba(240,202,104,.12), 0 15px 42px rgba(0,0,0,.55), 0 0 30px rgba(240,202,104,.36), inset 0 0 20px rgba(255,255,255,.06);
       opacity: 0;
-      backdrop-filter: blur(2px);
-      will-change: transform, opacity, filter;
+      will-change: transform, opacity;
       contain: layout style paint;
+      -webkit-font-smoothing: antialiased;
     }
 
     .hintOutput strong.good { color: #8df0b7; }
@@ -2782,6 +2898,7 @@
         <div class="drawerHome active" id="drawerHome">
           <nav class="drawerMenu" aria-label="Top-level drawer items">
             <button class="drawerMenuBtn" data-page="hintPage">Hint <small>strategy help</small></button>
+            <button class="drawerMenuBtn" id="openLogMenuBtn" type="button">Log <small>game history</small></button>
             <button class="drawerMenuBtn" data-page="settingsPage">Settings <small>appearance + gameplay</small></button>
             <button class="drawerMenuBtn" data-page="playersPage">Players &amp; Difficulty <small>opponents + difficulty</small></button>
             <button class="drawerMenuBtn" id="startNewGameMenuBtn" type="button">Start New Game <small>deal fresh cards</small></button>
@@ -2810,118 +2927,127 @@
 
         <section class="subpage" id="settingsPage">
           <div class="subTop"><button class="backBtn" data-back>‹</button><div class="subTitle">Settings</div></div>
-          <div class="sectionBox">
-            <h3>Theme / Appearance</h3>
-            <div class="controlRow">
-              <span class="controlLabel">Card faces</span>
-              <div class="segmented">
-                <button class="segBtn active" data-face="light">Light</button>
-                <button class="segBtn" data-face="dark">Dark</button>
-              </div>
-            </div>
-            <p class="smallHelp">Light uses white faces with black clubs/spades and red diamonds/hearts. Dark uses charcoal faces with high-contrast suit styling.</p>
-            <div class="controlRow" style="align-items:flex-start">
-              <span class="controlLabel">Card backs</span>
-              <div class="cardBackGallery" id="cardBackGallery">
-                <button class="cardBackOption active" type="button" data-backstyle="classic"><div class="cardBackThumb" data-style="classic"></div><span>Classic</span></button>
-                <button class="cardBackOption" type="button" data-backstyle="blueflame"><div class="cardBackThumb" data-style="blueflame"></div><span>Blue Flame</span></button>
-                <button class="cardBackOption" type="button" data-backstyle="wave"><div class="cardBackThumb" data-style="wave"></div><span>Wave</span></button>
-                <button class="cardBackOption" type="button" data-backstyle="solid-blue"><div class="cardBackThumb" data-style="solid-blue"></div><span>Blue</span></button>
-                <button class="cardBackOption" type="button" data-backstyle="solid-red"><div class="cardBackThumb" data-style="solid-red"></div><span>Red</span></button>
-                <button class="cardBackOption" type="button" data-backstyle="solid-black"><div class="cardBackThumb" data-style="solid-black"></div><span>Black</span></button>
-                <button class="cardBackOption" type="button" data-backstyle="solid-green"><div class="cardBackThumb" data-style="solid-green"></div><span>Green</span></button>
-                <button class="cardBackOption" type="button" data-backstyle="mix-red-blue"><div class="cardBackThumb" data-style="mix-red-blue"></div><span>Red/Blue</span></button>
-                <button class="cardBackOption" type="button" data-backstyle="mix-blue-black"><div class="cardBackThumb" data-style="mix-blue-black"></div><span>Blue/Black</span></button>
-                <button class="cardBackOption" type="button" data-backstyle="mix-red-black"><div class="cardBackThumb" data-style="mix-red-black"></div><span>Red/Black</span></button>
-                <button class="cardBackOption" type="button" data-backstyle="mix-red-green"><div class="cardBackThumb" data-style="mix-red-green"></div><span>Red/Green</span></button>
-                <button class="cardBackOption" type="button" data-backstyle="mix-green-black"><div class="cardBackThumb" data-style="mix-green-black"></div><span>Green/Black</span></button>
-                <button class="cardBackOption" type="button" data-backstyle="mix-green-blue"><div class="cardBackThumb" data-style="mix-green-blue"></div><span>Green/Blue</span></button>
-                <button class="cardBackOption" type="button" data-backstyle="custom-solid"><div class="cardBackThumb" data-style="custom-solid"></div><span>Custom</span></button>
-              </div>
-            </div>
-            <div class="controlRow">
-              <label for="customCardBack">Custom back color</label>
-              <input type="color" id="customCardBack" value="#1e4e8c" />
-            </div>
-            <div class="controlRow" style="align-items:flex-start">
-              <span class="controlLabel">Table felt</span>
-              <div class="feltPresetGrid">
-                <button class="feltChip active" type="button" data-felt="#0a5a3c" data-felt-deep="#084a33" aria-label="Classic green felt" style="background:#0a5a3c"></button>
-                <button class="feltChip" type="button" data-felt="#124a3b" data-felt-deep="#071f1a" aria-label="Deep green felt" style="background:#124a3b"></button>
-                <button class="feltChip" type="button" data-felt="#173f72" data-felt-deep="#07182d" aria-label="Blue felt" style="background:#173f72"></button>
-                <button class="feltChip" type="button" data-felt="#3a265f" data-felt-deep="#171020" aria-label="Purple felt" style="background:#3a265f"></button>
-                <button class="feltChip" type="button" data-felt="#1b2226" data-felt-deep="#050709" aria-label="Black felt" style="background:#1b2226"></button>
-                <button class="feltChip" type="button" data-felt="#7c231f" data-felt-deep="#210706" aria-label="Red felt" style="background:#7c231f"></button>
-              </div>
-            </div>
-            <div class="controlRow">
-              <label for="customFelt">Custom felt color</label>
-              <input type="color" id="customFelt" value="#0a5a3c" />
-            </div>
-            <p class="smallHelp">Choose the card back style and table felt color you want. These settings are saved for the next time you open the game.</p>
+          <div class="settingsTabs" role="tablist" aria-label="Settings sections">
+            <button class="settingsTabBtn active" type="button" data-settings-tab="appearance">Theme / Appearance</button>
+            <button class="settingsTabBtn" type="button" data-settings-tab="gameplay">Gameplay</button>
           </div>
 
-          <div class="sectionBox">
-            <h3>Gameplay</h3>
-            <div class="controlRow">
-              <div>
-                <div class="controlLabel">Auto-play all copies</div>
-                <p class="smallHelp">When on, tapping a rank would auto-play all legal copies except A, 2, and 10, which still require count choice.</p>
+          <div class="settingsTabPanel active" data-settings-panel="appearance">
+            <div class="sectionBox collapsible">
+              <button class="sectionHeader" type="button" data-collapse-target="appearanceSettingsContent"><span>Theme / Appearance</span><span class="chevron">⌄</span></button>
+              <div class="sectionContent" id="appearanceSettingsContent">
+                <div class="controlRow">
+                  <span class="controlLabel">Card faces</span>
+                  <div class="segmented">
+                    <button class="segBtn active" data-face="light">Light</button>
+                    <button class="segBtn" data-face="dark">Dark</button>
+                  </div>
+                </div>
+                <p class="smallHelp">Choose the card face, card back, and table felt. These settings are saved.</p>
+
+                <div class="nestedSettingsBlock">
+                  <button class="sectionHeader collapsed" type="button" data-collapse-target="cardBackSettingsContent"><span>Card backs</span><small id="cardBackSummary">Classic</small><span class="chevron">⌄</span></button>
+                  <div class="sectionContent collapsed" id="cardBackSettingsContent">
+                    <div class="cardBackGallery" id="cardBackGallery">
+                      <button class="cardBackOption active" type="button" data-backstyle="classic"><div class="cardBackThumb" data-style="classic"></div><span>Classic</span></button>
+                      <button class="cardBackOption" type="button" data-backstyle="blueflame"><div class="cardBackThumb" data-style="blueflame"></div><span>Blue Flame</span></button>
+                      <button class="cardBackOption" type="button" data-backstyle="wave"><div class="cardBackThumb" data-style="wave"></div><span>Wave</span></button>
+                      <button class="cardBackOption" type="button" data-backstyle="solid-blue"><div class="cardBackThumb" data-style="solid-blue"></div><span>Blue</span></button>
+                      <button class="cardBackOption" type="button" data-backstyle="solid-red"><div class="cardBackThumb" data-style="solid-red"></div><span>Red</span></button>
+                      <button class="cardBackOption" type="button" data-backstyle="solid-black"><div class="cardBackThumb" data-style="solid-black"></div><span>Black</span></button>
+                      <button class="cardBackOption" type="button" data-backstyle="solid-green"><div class="cardBackThumb" data-style="solid-green"></div><span>Green</span></button>
+                      <button class="cardBackOption" type="button" data-backstyle="mix-red-blue"><div class="cardBackThumb" data-style="mix-red-blue"></div><span>Red/Blue</span></button>
+                      <button class="cardBackOption" type="button" data-backstyle="mix-blue-black"><div class="cardBackThumb" data-style="mix-blue-black"></div><span>Blue/Black</span></button>
+                      <button class="cardBackOption" type="button" data-backstyle="mix-red-black"><div class="cardBackThumb" data-style="mix-red-black"></div><span>Red/Black</span></button>
+                      <button class="cardBackOption" type="button" data-backstyle="mix-red-green"><div class="cardBackThumb" data-style="mix-red-green"></div><span>Red/Green</span></button>
+                      <button class="cardBackOption" type="button" data-backstyle="mix-green-black"><div class="cardBackThumb" data-style="mix-green-black"></div><span>Green/Black</span></button>
+                      <button class="cardBackOption" type="button" data-backstyle="mix-green-blue"><div class="cardBackThumb" data-style="mix-green-blue"></div><span>Green/Blue</span></button>
+                      <button class="cardBackOption" type="button" data-backstyle="custom-solid"><div class="cardBackThumb" data-style="custom-solid"></div><span>Custom</span></button>
+                    </div>
+                    <div class="controlRow">
+                      <label for="customCardBack">Custom back color</label>
+                      <input type="color" id="customCardBack" value="#1e4e8c" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="controlRow" style="align-items:flex-start">
+                  <span class="controlLabel">Table felt</span>
+                  <div class="feltPresetGrid">
+                    <button class="feltChip active" type="button" data-felt="#0a5a3c" data-felt-deep="#084a33" aria-label="Classic green felt" style="background:#0a5a3c"></button>
+                    <button class="feltChip" type="button" data-felt="#124a3b" data-felt-deep="#071f1a" aria-label="Deep green felt" style="background:#124a3b"></button>
+                    <button class="feltChip" type="button" data-felt="#173f72" data-felt-deep="#07182d" aria-label="Blue felt" style="background:#173f72"></button>
+                    <button class="feltChip" type="button" data-felt="#3a265f" data-felt-deep="#171020" aria-label="Purple felt" style="background:#3a265f"></button>
+                    <button class="feltChip" type="button" data-felt="#1b2226" data-felt-deep="#050709" aria-label="Black felt" style="background:#1b2226"></button>
+                    <button class="feltChip" type="button" data-felt="#7c231f" data-felt-deep="#210706" aria-label="Red felt" style="background:#7c231f"></button>
+                  </div>
+                </div>
+                <div class="controlRow">
+                  <label for="customFelt">Custom felt color</label>
+                  <input type="color" id="customFelt" value="#0a5a3c" />
+                </div>
               </div>
-              <button class="toggle on" data-toggle="autoPlay" aria-label="Toggle auto-play all copies"></button>
-            </div>
-            <div class="controlRow">
-              <label for="clearAnimation">Pile clear animation</label>
-              <select id="clearAnimation">
-                <option>Slide</option>
-                <option>Fade</option>
-                <option>Dissolve</option>
-                <option selected>Explode</option>
-                <option>Invert+Fade</option>
-                <option>Snap</option>
-                <option>None</option>
-              </select>
-            </div>
-            <div class="controlRow">
-              <label for="tenEffect">10 clear effect</label>
-              <select id="tenEffect">
-                <option selected>Arcane</option>
-                <option>Fire</option>
-                <option>Explosion</option>
-              </select>
-            </div>
-            <div class="controlRow">
-              <div>
-                <div class="controlLabel">Animations</div>
-                <p class="smallHelp">Card tosses and pile-clear effects. Turn this off for instant play.</p>
-              </div>
-              <button class="toggle on" data-toggle="animations" aria-label="Toggle animations"></button>
-            </div>
-            <div class="controlRow">
-              <div>
-                <div class="controlLabel">Center live pile card</div>
-                <p class="smallHelp">Moves the live card to the middle, keeps older pile cards on the left, and lets the log show on the right.</p>
-              </div>
-              <button class="toggle" data-toggle="centerLivePile" aria-label="Toggle centered live pile card"></button>
-            </div>
-            <div class="controlRow">
-              <span class="controlLabel">Show suits</span>
-              <button class="toggle on" data-toggle="showSuits" aria-label="Toggle show suits"></button>
-            </div>
-            <div class="controlRow">
-              <span class="controlLabel">Show hint</span>
-              <button class="toggle on" data-toggle="showHint" aria-label="Toggle show hint"></button>
-            </div>
-            <div class="controlRow">
-              <span class="controlLabel">Sound</span>
-              <button class="toggle" data-toggle="sound" aria-label="Toggle sound"></button>
             </div>
           </div>
 
-          <div class="sectionBox">
-            <h3>Log</h3>
-            <p>The log lists plays, clears, pickups, and round events in order.</p>
-            <button class="logBtn" id="openLog">Open log view</button>
+          <div class="settingsTabPanel" data-settings-panel="gameplay">
+            <div class="sectionBox collapsible">
+              <button class="sectionHeader" type="button" data-collapse-target="gameplaySettingsContent"><span>Gameplay</span><span class="chevron">⌄</span></button>
+              <div class="sectionContent" id="gameplaySettingsContent">
+                <div class="controlRow">
+                  <div>
+                    <div class="controlLabel">Auto-play all copies</div>
+                    <p class="smallHelp">When on, tapping a rank auto-plays all legal copies except A, 2, and 10.</p>
+                  </div>
+                  <button class="toggle on" data-toggle="autoPlay" aria-label="Toggle auto-play all copies"></button>
+                </div>
+                <div class="controlRow">
+                  <label for="clearAnimation">Pile clear animation</label>
+                  <select id="clearAnimation">
+                    <option>Slide</option>
+                    <option>Fade</option>
+                    <option>Dissolve</option>
+                    <option selected>Explode</option>
+                    <option>Invert+Fade</option>
+                    <option>Snap</option>
+                    <option>None</option>
+                  </select>
+                </div>
+                <div class="controlRow">
+                  <label for="tenEffect">10 clear effect</label>
+                  <select id="tenEffect">
+                    <option selected>Arcane</option>
+                    <option>None</option>
+                  </select>
+                </div>
+                <div class="controlRow">
+                  <div>
+                    <div class="controlLabel">Animations</div>
+                    <p class="smallHelp">Card tosses and pile-clear effects. Turn this off for instant play.</p>
+                  </div>
+                  <button class="toggle on" data-toggle="animations" aria-label="Toggle animations"></button>
+                </div>
+                <div class="controlRow">
+                  <div>
+                    <div class="controlLabel">Center live pile card</div>
+                    <p class="smallHelp">Moves the live card to the middle, keeps older pile cards on the left, and lets SCORE or LOG appear on the right.</p>
+                  </div>
+                  <button class="toggle on" data-toggle="centerLivePile" aria-label="Toggle centered live pile card"></button>
+                </div>
+                <div class="controlRow">
+                  <span class="controlLabel">Show suits</span>
+                  <button class="toggle on" data-toggle="showSuits" aria-label="Toggle show suits"></button>
+                </div>
+                <div class="controlRow">
+                  <span class="controlLabel">Show hint</span>
+                  <button class="toggle on" data-toggle="showHint" aria-label="Toggle show hint"></button>
+                </div>
+                <div class="controlRow">
+                  <span class="controlLabel">Sound</span>
+                  <button class="toggle" data-toggle="sound" aria-label="Toggle sound"></button>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -3070,7 +3196,7 @@
       toggles: {
         autoPlay: true,
         animations: true,
-        centerLivePile: false,
+        centerLivePile: true,
         pileInlineLog: false,
         pileInlineScores: true,
         showSuits: true,
@@ -3255,11 +3381,15 @@
           el.difficultySelect.value = state.difficulty;
         }
         if (typeof saved.animations === 'boolean') state.toggles.animations = saved.animations;
-        if (typeof saved.centerLivePile === 'boolean') state.toggles.centerLivePile = saved.centerLivePile;
+        if (saved.centerLiveDefaultV73 === true && typeof saved.centerLivePile === 'boolean') {
+          state.toggles.centerLivePile = saved.centerLivePile;
+        } else {
+          state.toggles.centerLivePile = true;
+        }
         if (typeof saved.pileInlineScores === 'boolean') state.toggles.pileInlineScores = saved.pileInlineScores;
         if (typeof saved.pileInlineLog === 'boolean') state.toggles.pileInlineLog = saved.pileInlineLog;
         if (saved.clearAnimation && el.clearAnimation) el.clearAnimation.value = saved.clearAnimation;
-        if (saved.tenEffect && el.tenEffect) el.tenEffect.value = saved.tenEffect === 'Lightning' ? 'Arcane' : saved.tenEffect;
+        if (saved.tenEffect && el.tenEffect) el.tenEffect.value = saved.tenEffect === 'None' ? 'None' : 'Arcane';
         if (saved.customCardBack) setCustomCardBack(saved.customCardBack);
         if (saved.cardBack) setBack(saved.cardBack);
         if (saved.felt) setFelt(saved.felt, saved.feltDeep || makeDarkerColor(saved.felt));
@@ -3278,11 +3408,12 @@
         localStorage.setItem(PREF_KEY, JSON.stringify({
           difficulty: state.difficulty,
           animations: !!state.toggles.animations,
+          centerLiveDefaultV73: true,
           centerLivePile: !!state.toggles.centerLivePile,
           pileInlineLog: !!state.toggles.pileInlineLog,
           pileInlineScores: !!state.toggles.pileInlineScores,
           clearAnimation: el.clearAnimation ? el.clearAnimation.value : 'Explode',
-          tenEffect: el.tenEffect ? el.tenEffect.value : 'Arcane',
+          tenEffect: el.tenEffect ? (el.tenEffect.value === 'None' ? 'None' : 'Arcane') : 'Arcane',
           cardBack: state.appearance.cardBack,
           customCardBack: state.appearance.customCardBack,
           felt: state.appearance.felt,
@@ -3617,10 +3748,10 @@
       burst.textContent = 'Your turn';
       document.body.appendChild(burst);
       const anim = burst.animate([
-        { opacity: 0, transform: 'translate(-50%, -50%) scale(.78)', filter: 'brightness(.9) blur(1px)' },
-        { opacity: 1, transform: 'translate(-50%, -50%) scale(1.08)', filter: 'brightness(1.20) blur(0)', offset: .16 },
-        { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', filter: 'brightness(1.04)', offset: .90 },
-        { opacity: 0, transform: 'translate(-50%, -50%) scale(.98)', filter: 'brightness(.95) blur(.45px)' }
+        { opacity: 0, transform: 'translate3d(-50%, -50%, 0) scale(.78)' },
+        { opacity: 1, transform: 'translate3d(-50%, -50%, 0) scale(1.08)', offset: .16 },
+        { opacity: 1, transform: 'translate3d(-50%, -50%, 0) scale(1)', offset: .90 },
+        { opacity: 0, transform: 'translate3d(-50%, -50%, 0) scale(.98)' }
       ], { duration: 1950, easing: 'cubic-bezier(.18,.86,.22,1)', fill: 'forwards' });
       anim.finished.finally(() => burst.remove()).catch(() => burst.remove());
       return anim;
@@ -4123,11 +4254,13 @@
 
     function flashTenText() {
       if (!animationsEnabled()) return Promise.resolve();
-      const anchor = el.pileCurrentCard && el.pileCurrentCard.getBoundingClientRect().width
-        ? el.pileCurrentCard.getBoundingClientRect()
+      const liveSpot = document.querySelector('.pileCurrentWrap') || el.pileCurrentCard || el.pilePanel;
+      const anchor = liveSpot.getBoundingClientRect().width
+        ? liveSpot.getBoundingClientRect()
         : el.pilePanel.getBoundingClientRect();
       const rawTenEffect = (el.tenEffect && el.tenEffect.value) ? el.tenEffect.value : 'Arcane';
-      const effectRaw = rawTenEffect === 'Lightning' ? 'Arcane' : rawTenEffect;
+      if (rawTenEffect === 'None') return Promise.resolve();
+      const effectRaw = 'Arcane';
       const effectSlug = effectRaw.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       const burst = document.createElement('div');
       burst.className = `tenBurst effect-${effectSlug}`;
@@ -4619,9 +4752,9 @@
           const ty = target.top - (src.top + src.height / 2) + (i % 4 - 1.5) * (opponentCountPickup ? .55 : 3);
           const lift = -20 - Math.min(18, uniqueIds.length * 1.15);
           const rot = (i % 2 ? 1 : -1) * (6 + (i % 5) * 3.0);
-          const delay = Math.min(opponentCountPickup ? 98 : 118, i * (opponentCountPickup ? 13 : 15));
-          const duration = opponentCountPickup ? 585 : 610;
-          const impactAt = delay + duration * (opponentCountPickup ? 0.74 : 0.86);
+          const delay = Math.min(opponentCountPickup ? 150 : 118, i * (opponentCountPickup ? 20 : 15));
+          const duration = opponentCountPickup ? 940 + Math.min(120, uniqueIds.length * 8) : 610;
+          const impactAt = delay + duration * (opponentCountPickup ? 0.82 : 0.86);
           latestImpactMs = Math.max(latestImpactMs, impactAt);
           const anim = sprite.animate([
             { transform: 'translate(0,0) rotate(0deg) scale(1)', opacity: 1, filter: 'brightness(1)' },
@@ -4629,14 +4762,14 @@
             { transform: `translate(${tx * .91}px, ${ty * .91}px) rotate(${rot * .14}deg) scale(${opponentCountPickup ? .44 : .44})`, opacity: 1, filter: 'brightness(1.16)', offset: opponentCountPickup ? .74 : .86 },
             { transform: `translate(${tx}px, ${ty}px) rotate(${rot * .06}deg) scale(${opponentCountPickup ? .18 : .34})`, opacity: 1, filter: 'brightness(1.30)', offset: opponentCountPickup ? .88 : .94 },
             { transform: `translate(${tx}px, ${ty}px) rotate(0deg) scale(${opponentCountPickup ? .08 : .22})`, opacity: opponentCountPickup ? 0 : .15, filter: opponentCountPickup ? 'brightness(1.45)' : 'brightness(.8) blur(.8px)' }
-          ], { duration, delay, easing: 'cubic-bezier(.20,.78,.20,1)', fill: 'forwards' });
+          ], { duration, delay, easing: opponentCountPickup ? 'cubic-bezier(.18,.70,.20,1)' : 'cubic-bezier(.20,.78,.20,1)', fill: 'forwards' });
           animations.push(anim.finished.catch(() => {}));
           anim.finished.finally(() => sprite.remove()).catch(() => sprite.remove());
         });
 
         const cardsPromise = Promise.all(animations);
         const impactPromise = opponentCountPickup
-          ? sleep(Math.max(230, latestImpactMs - 60))
+          ? sleep(Math.max(380, latestImpactMs - 70))
           : cardsPromise;
         const countPromise = opponentCountPickup
           ? animateOpponentHandCountPickup(playerId, pickupCount, impactPromise)
@@ -6672,6 +6805,15 @@
       document.body.dataset.cardback = next;
       state.appearance.cardBack = next;
       document.querySelectorAll('[data-backstyle]').forEach(btn => btn.classList.toggle('active', btn.dataset.backstyle === next));
+      const labelMap = {
+        classic: 'Classic', blueflame: 'Blue Flame', wave: 'Wave',
+        'solid-blue': 'Blue', 'solid-red': 'Red', 'solid-black': 'Black', 'solid-green': 'Green',
+        'mix-red-blue': 'Red/Blue', 'mix-blue-black': 'Blue/Black', 'mix-red-black': 'Red/Black',
+        'mix-red-green': 'Red/Green', 'mix-green-black': 'Green/Black', 'mix-green-blue': 'Green/Blue',
+        'custom-solid': 'Custom'
+      };
+      const summary = document.getElementById('cardBackSummary');
+      if (summary) summary.textContent = labelMap[next] || 'Classic';
     }
 
     function setFelt(color, deep = null) {
@@ -6701,16 +6843,68 @@
       startNewGame();
     }
 
+    function activateSettingsTab(tabName) {
+      const next = tabName === 'gameplay' ? 'gameplay' : 'appearance';
+      document.querySelectorAll('[data-settings-tab]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.settingsTab === next);
+      });
+      document.querySelectorAll('[data-settings-panel]').forEach(panel => {
+        panel.classList.toggle('active', panel.dataset.settingsPanel === next);
+      });
+    }
+
+    function toggleSectionContent(targetId) {
+      const content = document.getElementById(targetId);
+      if (!content) return;
+      const button = document.querySelector(`[data-collapse-target="${targetId}"]`);
+      const collapsed = !content.classList.contains('collapsed');
+      content.classList.toggle('collapsed', collapsed);
+      if (button) button.classList.toggle('collapsed', collapsed);
+    }
+
+    function bindDrawerSwipe() {
+      let startX = 0;
+      let startY = 0;
+      let startTime = 0;
+      const zone = el.drawer;
+      if (!zone) return;
+      zone.addEventListener('touchstart', event => {
+        const touch = event.touches && event.touches[0];
+        if (!touch) return;
+        startX = touch.clientX;
+        startY = touch.clientY;
+        startTime = performance.now();
+      }, { passive: true });
+      zone.addEventListener('touchend', event => {
+        const touch = event.changedTouches && event.changedTouches[0];
+        if (!touch || !startX) return;
+        const dx = touch.clientX - startX;
+        const dy = touch.clientY - startY;
+        const fastEnough = performance.now() - startTime < 850;
+        if (fastEnough && dx > 56 && Math.abs(dx) > Math.abs(dy) * 1.15) {
+          const activeSubpage = document.querySelector('.subpage.active');
+          if (activeSubpage) showHome();
+          else el.drawer.classList.remove('open');
+        }
+        startX = 0;
+        startY = 0;
+      }, { passive: true });
+    }
+
     function bindEvents() {
       el.drawerTab.addEventListener('click', () => el.drawer.classList.toggle('open'));
       el.closeDrawer.addEventListener('click', () => el.drawer.classList.remove('open'));
       document.querySelectorAll('[data-page]').forEach(btn => btn.addEventListener('click', () => showPage(btn.dataset.page)));
+      const openLogMenuBtn = document.getElementById('openLogMenuBtn');
+      if (openLogMenuBtn) openLogMenuBtn.addEventListener('click', () => { renderLogModal(); el.logModal.classList.add('open'); });
       if (el.startNewGameMenuBtn) el.startNewGameMenuBtn.addEventListener('click', openNewGameConfirm);
       if (el.newGameCancelBtn) el.newGameCancelBtn.addEventListener('click', closeNewGameConfirm);
       if (el.newGameCancelX) el.newGameCancelX.addEventListener('click', closeNewGameConfirm);
       if (el.newGameConfirmBtn) el.newGameConfirmBtn.addEventListener('click', confirmStartNewGame);
       if (el.newGameConfirmModal) el.newGameConfirmModal.addEventListener('click', event => { if (event.target === el.newGameConfirmModal) closeNewGameConfirm(); });
       document.querySelectorAll('[data-back]').forEach(btn => btn.addEventListener('click', showHome));
+      document.querySelectorAll('[data-settings-tab]').forEach(btn => btn.addEventListener('click', () => activateSettingsTab(btn.dataset.settingsTab)));
+      document.querySelectorAll('[data-collapse-target]').forEach(btn => btn.addEventListener('click', () => toggleSectionContent(btn.dataset.collapseTarget)));
       document.querySelectorAll('[data-face]').forEach(btn => btn.addEventListener('click', () => setFace(btn.dataset.face)));
       document.querySelectorAll('[data-backstyle]').forEach(btn => btn.addEventListener('click', () => { setBack(btn.dataset.backstyle); savePrefs(); }));
       document.querySelectorAll('[data-felt]').forEach(btn => btn.addEventListener('click', () => { setFelt(btn.dataset.felt, btn.dataset.feltDeep || makeDarkerColor(btn.dataset.felt)); savePrefs(); }));
@@ -6739,7 +6933,8 @@
       el.difficultySelect.addEventListener('change', event => { state.difficulty = event.target.value; savePrefs(); renderDifficultyDescriptions(); });
       if (el.clearAnimation) el.clearAnimation.addEventListener('change', savePrefs);
       if (el.tenEffect) el.tenEffect.addEventListener('change', savePrefs);
-      document.getElementById('openLog').addEventListener('click', () => { renderLogModal(); el.logModal.classList.add('open'); });
+      const openLog = document.getElementById('openLog');
+      if (openLog) openLog.addEventListener('click', () => { renderLogModal(); el.logModal.classList.add('open'); });
       if (el.quickLogBtn) el.quickLogBtn.addEventListener('click', () => {
         if (state.toggles.centerLivePile) {
           const next = !state.toggles.pileInlineLog;
@@ -6775,6 +6970,7 @@
       document.getElementById('explainLastBtn').addEventListener('click', explainLastTurn);
       window.addEventListener('resize', () => requestAnimationFrame(layoutAll));
       window.addEventListener('orientationchange', () => setTimeout(layoutAll, 180));
+      bindDrawerSwipe();
       window.addEventListener('beforeunload', saveGameProgress);
     }
 
