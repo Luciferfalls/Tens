@@ -854,6 +854,10 @@
       pointer-events: auto;
     }
 
+    .drawer.dragging {
+      transition: none !important;
+    }
+
     .drawerTab {
       position: absolute;
       left: -21px;
@@ -1916,15 +1920,17 @@
       font-weight: 1000;
       line-height: 1;
       color: #fff7d2;
-      background: rgba(7, 11, 22, 0.90);
+      background: rgba(7, 11, 22, 0.94);
       border: 1px solid rgba(240,202,104,0.78);
       box-shadow: 0 0 0 2px rgba(240,202,104,0.12), 0 14px 32px rgba(0,0,0,0.44), 0 0 18px rgba(240,202,104,0.30);
-      transform: translate(-50%, -50%);
+      transform: translate3d(-50%, -50%, 0);
       transform-origin: center center;
-      will-change: transform, opacity, filter;
+      will-change: transform, opacity;
       white-space: nowrap;
-      backdrop-filter: blur(2px);
       contain: layout style paint;
+      backface-visibility: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
     }
 
     .pickupCountBurst.pillMorph {
@@ -2145,6 +2151,61 @@
       user-select: none;
     }
 
+    .tenBurst.effect-arcane .tenMain {
+      color: #7f55ff;
+      -webkit-text-stroke-color: rgba(255, 216, 98, 0.98);
+      text-shadow:
+        0 0 2px rgba(63, 24, 138, .96),
+        0 0 9px rgba(135, 88, 255, .95),
+        0 0 18px rgba(93, 219, 255, .72),
+        0 0 30px rgba(255, 211, 90, .82),
+        0 0 52px rgba(151, 104, 255, .58);
+      animation: tenArcanePulse .62s ease-in-out infinite alternate;
+    }
+
+    .tenBurst.effect-arcane::before,
+    .tenBurst.effect-arcane::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      pointer-events: none;
+      border-radius: 999px;
+      transform: translate(-50%, -50%);
+    }
+
+    .tenBurst.effect-arcane::before {
+      width: 1.42em;
+      height: 1.42em;
+      border: 2px solid rgba(115, 225, 255, .74);
+      box-shadow: 0 0 12px rgba(115,225,255,.62), inset 0 0 14px rgba(127,85,255,.38);
+      animation: tenArcaneRing 1.05s ease-out infinite;
+    }
+
+    .tenBurst.effect-arcane::after {
+      width: 1.92em;
+      height: 1.92em;
+      border: 1px dashed rgba(255, 216, 98, .62);
+      animation: tenArcaneSpin 1.35s linear infinite;
+    }
+
+    .tenBurst.effect-arcane .tenFx {
+      color: #dffaff;
+      font-size: clamp(.62rem, 4.5vw, 1.25rem);
+      font-weight: 1000;
+      text-shadow: 0 0 8px rgba(115,225,255,.95), 0 0 16px rgba(151,104,255,.72), 0 0 22px rgba(255,216,98,.54);
+      animation: tenArcaneSpark .72s ease-out infinite;
+    }
+
+    .tenBurst.effect-arcane .fx1 { left: -.42em; top: .06em; animation-delay: .02s; }
+    .tenBurst.effect-arcane .fx2 { right: -.40em; top: .08em; animation-delay: .12s; }
+    .tenBurst.effect-arcane .fx3 { left: 50%; top: -.46em; transform: translateX(-50%); animation-delay: .22s; }
+    .tenBurst.effect-arcane .fx4 { left: .06em; bottom: -.38em; animation-delay: .18s; }
+    .tenBurst.effect-arcane .fx5 { right: .04em; bottom: -.36em; animation-delay: .28s; }
+    .tenBurst.effect-arcane .fx6 { left: -.62em; top: -.26em; animation-delay: .34s; }
+    .tenBurst.effect-arcane .fx7 { right: -.58em; top: -.24em; animation-delay: .40s; }
+    .tenBurst.effect-arcane .fx8 { left: -.56em; bottom: -.22em; animation-delay: .46s; }
+
     .tenBurst.effect-fire .tenMain {
       color: #8a56ff;
       text-shadow:
@@ -2225,6 +2286,28 @@
       42% { opacity: .22; }
       60% { opacity: 1; }
       100% { opacity: 0; filter: drop-shadow(0 0 4px rgba(255, 244, 124, .6)); }
+    }
+
+    @keyframes tenArcanePulse {
+      0% { transform: translateY(0) scale(1); filter: saturate(1.12); }
+      100% { transform: translateY(-1px) scale(1.035); filter: saturate(1.35); }
+    }
+
+    @keyframes tenArcaneRing {
+      0% { transform: translate(-50%, -50%) scale(.55); opacity: 0; }
+      28% { opacity: .95; }
+      100% { transform: translate(-50%, -50%) scale(1.42); opacity: 0; }
+    }
+
+    @keyframes tenArcaneSpin {
+      0% { transform: translate(-50%, -50%) rotate(0deg) scale(.92); opacity: .86; }
+      100% { transform: translate(-50%, -50%) rotate(360deg) scale(.92); opacity: .86; }
+    }
+
+    @keyframes tenArcaneSpark {
+      0% { opacity: 0; filter: brightness(.9); }
+      28% { opacity: 1; filter: brightness(1.55); }
+      100% { opacity: 0; filter: brightness(1.05); }
     }
 
     @keyframes tenFireFlicker {
@@ -3240,7 +3323,17 @@
       'Tries to lose': 'Tries to lose follows the final losing policy: if a pile exists, it tries to overplay and take the pile while avoiding 10s when possible. On a fresh pile, it plays exactly one lowest-value hand card, avoiding 10 if possible. It never voluntarily plays a 10 if another losing option exists.'
     };
 
-    const AI_NAMES = ['Alex', 'Bailey', 'Casey', 'Drew'];
+    const AI_NAMES = [
+      'Alex', 'Bailey', 'Casey', 'Drew', 'Morgan', 'Riley', 'Jordan', 'Taylor',
+      'Avery', 'Quinn', 'Parker', 'Reese', 'Rowan', 'Cameron', 'Jamie', 'Skyler',
+      'Harper', 'Logan', 'Emerson', 'Finley', 'Dakota', 'Kendall', 'Sage', 'Blake',
+      'Hayden', 'Marley', 'Phoenix', 'River', 'Sawyer', 'Tatum', 'Mackenzie', 'Ari',
+      'Nico', 'Maya', 'Lena', 'Miles', 'Elliot', 'Nora', 'Owen', 'Ivy', 'Theo', 'Zoe'
+    ];
+
+    function randomAiNames(count) {
+      return shuffle(AI_NAMES.slice()).slice(0, count).map((name, index) => name || `AI ${index + 1}`);
+    }
 
     const el = {
       opponentsGrid: document.getElementById('opponentsGrid'),
@@ -3321,6 +3414,8 @@
         missedHighPointThreatUnloads: 0,
         endgameStopperOpportunities: 0,
         missedEndgameStoppers: 0,
+        expertComparisons: 0,
+        expertMatches: 0,
         recent: []
       };
     }
@@ -3334,7 +3429,8 @@
             chosen: String(item?.chosen || ''),
             expert: String(item?.expert || ''),
             chosenExplanation: String(item?.chosenExplanation || ''),
-            expertExplanation: String(item?.expertExplanation || '')
+            expertExplanation: String(item?.expertExplanation || ''),
+            expertMatch: !!item?.expertMatch
           })) : [];
         } else if (Number.isFinite(Number(raw[key]))) {
           base[key] = Number(raw[key]);
@@ -3629,10 +3725,11 @@
 
       if (newMatch || rosterChanged || !game.players.length) {
         game.players = [];
+        const aiNamesThisGame = randomAiNames(Math.max(0, playerCount - 1));
         for (let i = 0; i < playerCount; i++) {
           game.players.push({
             id: i,
-            name: i === 0 ? 'You' : `${AI_NAMES[i - 1] || 'AI ' + i}`,
+            name: i === 0 ? 'You' : `${aiNamesThisGame[i - 1] || 'AI ' + i}`,
             isHuman: i === 0,
             hand: [],
             stacks: [],
@@ -4254,22 +4351,14 @@
 
     function flashTenText() {
       if (!animationsEnabled()) return Promise.resolve();
-      const liveSpot = document.querySelector('.pileCurrentWrap') || el.pileCurrentCard || el.pilePanel;
-      const anchor = liveSpot.getBoundingClientRect().width
-        ? liveSpot.getBoundingClientRect()
-        : el.pilePanel.getBoundingClientRect();
+      const anchor = livePileTargetRect();
       const rawTenEffect = (el.tenEffect && el.tenEffect.value) ? el.tenEffect.value : 'Arcane';
       if (rawTenEffect === 'None') return Promise.resolve();
       const effectRaw = 'Arcane';
       const effectSlug = effectRaw.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       const burst = document.createElement('div');
       burst.className = `tenBurst effect-${effectSlug}`;
-      burst.innerHTML = `<span class="tenMain">10</span><span class="tenFx fx1"></span><span class="tenFx fx2"></span><span class="tenFx fx3"></span><span class="tenFx fx4"></span><span class="tenFx fx5"></span><span class="tenFx fx6"></span><span class="tenFx fx7"></span><span class="tenFx fx8"></span><span class="tenFx fx9"></span><span class="tenFx fx10"></span><span class="tenFx fx11"></span><span class="tenFx fx12"></span>`;
-      if (effectRaw === 'Explosion') {
-        burst.querySelector('.fx1').textContent = '✦';
-        burst.querySelector('.fx2').textContent = '✦';
-        burst.querySelector('.fx3').textContent = '✹';
-      }
+      burst.innerHTML = `<span class="tenMain">10</span><span class="tenFx fx1">✦</span><span class="tenFx fx2">✦</span><span class="tenFx fx3">✹</span><span class="tenFx fx4">✧</span><span class="tenFx fx5">✧</span><span class="tenFx fx6">✦</span><span class="tenFx fx7">✦</span><span class="tenFx fx8">✹</span><span class="tenFx fx9"></span><span class="tenFx fx10"></span><span class="tenFx fx11"></span><span class="tenFx fx12"></span>`;
       burst.style.left = `${anchor.left + anchor.width / 2}px`;
       burst.style.top = `${anchor.top + anchor.height * 0.50}px`;
       document.body.appendChild(burst);
@@ -4415,6 +4504,8 @@
 
       const burst = document.createElement('div');
       burst.className = 'pickupCountBurst pillMorph';
+      burst.style.webkitFontSmoothing = 'antialiased';
+      burst.style.textRendering = 'geometricPrecision';
       burst.textContent = `H: ${oldCount}`;
       burst.style.left = `${startCenterX}px`;
       burst.style.top = `${startCenterY}px`;
@@ -4440,13 +4531,13 @@
         const centerScale = Math.max(2.65, Math.min(5.25,
           Math.min(desiredW / Math.max(1, pillRect.width), desiredH / Math.max(1, pillRect.height))
         ));
-        const centerTransform = `translate(calc(-50% + ${centerDx}px), calc(-50% + ${centerDy}px)) scale(${centerScale})`;
-        const startTransform = 'translate(-50%, -50%) scale(1)';
+        const centerTransform = `translate3d(calc(-50% + ${centerDx}px), calc(-50% + ${centerDy}px), 0) scale(${centerScale})`;
+        const startTransform = 'translate3d(-50%, -50%, 0) scale(1)';
 
         const phase1 = burst.animate([
           { transform: startTransform, opacity: 1, filter: 'brightness(1)' },
-          { transform: `translate(calc(-50% + ${centerDx * .38}px), calc(-50% + ${centerDy * .38}px)) scale(${Math.max(1.35, centerScale * .48)})`, opacity: 1, filter: 'brightness(1.04)', offset: .34 },
-          { transform: `translate(calc(-50% + ${centerDx * .82}px), calc(-50% + ${centerDy * .82}px)) scale(${centerScale * .93})`, opacity: 1, filter: 'brightness(1.08)', offset: .74 },
+          { transform: `translate3d(calc(-50% + ${centerDx * .38}px), calc(-50% + ${centerDy * .38}px), 0) scale(${Math.max(1.35, centerScale * .48)})`, opacity: 1, filter: 'brightness(1.04)', offset: .34 },
+          { transform: `translate3d(calc(-50% + ${centerDx * .82}px), calc(-50% + ${centerDy * .82}px), 0) scale(${centerScale * .93})`, opacity: 1, filter: 'brightness(1.08)', offset: .74 },
           { transform: centerTransform, opacity: 1, filter: 'brightness(1.03)' }
         ], { duration: 465, easing: 'cubic-bezier(.20,.82,.22,1)', fill: 'forwards' });
 
@@ -4461,7 +4552,7 @@
         const finalCenterY = finalPillRect.top + finalPillRect.height / 2;
         const finalDx = finalCenterX - startCenterX;
         const finalDy = finalCenterY - startCenterY;
-        const finalTransform = `translate(calc(-50% + ${finalDx}px), calc(-50% + ${finalDy}px)) scale(1)`;
+        const finalTransform = `translate3d(calc(-50% + ${finalDx}px), calc(-50% + ${finalDy}px), 0) scale(1)`;
 
         const finalPillStyle = getComputedStyle(pill);
         burst.style.width = `${Math.max(1, finalPillRect.width)}px`;
@@ -4478,7 +4569,7 @@
 
         const pulse = burst.animate([
           { transform: centerTransform, opacity: 1, filter: 'brightness(1.20)' },
-          { transform: `translate(calc(-50% + ${centerDx}px), calc(-50% + ${centerDy}px)) scale(${centerScale * 1.17})`, opacity: 1, filter: 'brightness(1.34)', offset: .44 },
+          { transform: `translate3d(calc(-50% + ${centerDx}px), calc(-50% + ${centerDy}px), 0) scale(${centerScale * 1.17})`, opacity: 1, filter: 'brightness(1.34)', offset: .44 },
           { transform: centerTransform, opacity: 1, filter: 'brightness(1.16)' }
         ], { duration: 420, easing: 'cubic-bezier(.18,.76,.22,1)', fill: 'forwards' });
 
@@ -4752,15 +4843,15 @@
           const ty = target.top - (src.top + src.height / 2) + (i % 4 - 1.5) * (opponentCountPickup ? .55 : 3);
           const lift = -20 - Math.min(18, uniqueIds.length * 1.15);
           const rot = (i % 2 ? 1 : -1) * (6 + (i % 5) * 3.0);
-          const delay = Math.min(opponentCountPickup ? 150 : 118, i * (opponentCountPickup ? 20 : 15));
-          const duration = opponentCountPickup ? 940 + Math.min(120, uniqueIds.length * 8) : 610;
-          const impactAt = delay + duration * (opponentCountPickup ? 0.82 : 0.86);
+          const delay = Math.min(opponentCountPickup ? 210 : 118, i * (opponentCountPickup ? 30 : 15));
+          const duration = opponentCountPickup ? 1280 + Math.min(220, uniqueIds.length * 12) : 610;
+          const impactAt = delay + duration * (opponentCountPickup ? 0.86 : 0.86);
           latestImpactMs = Math.max(latestImpactMs, impactAt);
           const anim = sprite.animate([
             { transform: 'translate(0,0) rotate(0deg) scale(1)', opacity: 1, filter: 'brightness(1)' },
-            { transform: `translate(${tx * .42}px, ${ty * .42 + lift}px) rotate(${rot * .35}deg) scale(1.035)`, opacity: 1, filter: 'brightness(1.10)', offset: .40 },
-            { transform: `translate(${tx * .91}px, ${ty * .91}px) rotate(${rot * .14}deg) scale(${opponentCountPickup ? .44 : .44})`, opacity: 1, filter: 'brightness(1.16)', offset: opponentCountPickup ? .74 : .86 },
-            { transform: `translate(${tx}px, ${ty}px) rotate(${rot * .06}deg) scale(${opponentCountPickup ? .18 : .34})`, opacity: 1, filter: 'brightness(1.30)', offset: opponentCountPickup ? .88 : .94 },
+            { transform: `translate(${tx * .36}px, ${ty * .36 + lift}px) rotate(${rot * .35}deg) scale(1.035)`, opacity: 1, filter: 'brightness(1.10)', offset: opponentCountPickup ? .46 : .40 },
+            { transform: `translate(${tx * .78}px, ${ty * .78}px) rotate(${rot * .14}deg) scale(${opponentCountPickup ? .52 : .44})`, opacity: 1, filter: 'brightness(1.16)', offset: opponentCountPickup ? .78 : .86 },
+            { transform: `translate(${tx}px, ${ty}px) rotate(${rot * .06}deg) scale(${opponentCountPickup ? .22 : .34})`, opacity: 1, filter: 'brightness(1.30)', offset: opponentCountPickup ? .91 : .94 },
             { transform: `translate(${tx}px, ${ty}px) rotate(0deg) scale(${opponentCountPickup ? .08 : .22})`, opacity: opponentCountPickup ? 0 : .15, filter: opponentCountPickup ? 'brightness(1.45)' : 'brightness(.8) blur(.8px)' }
           ], { duration, delay, easing: opponentCountPickup ? 'cubic-bezier(.18,.70,.20,1)' : 'cubic-bezier(.20,.78,.20,1)', fill: 'forwards' });
           animations.push(anim.finished.catch(() => {}));
@@ -4840,6 +4931,9 @@
       if (!ids.length) return;
 
       const panelRect = el.pilePanel.getBoundingClientRect();
+      const liveRect = livePileTargetRect();
+      const clearOriginX = liveRect.left + liveRect.width / 2;
+      const clearOriginY = liveRect.top + liveRect.height / 2;
       const nodes = ids.map(id => findCardElement(id));
       const rects = ids.map((id, i) => {
         const node = nodes[i];
@@ -4871,8 +4965,8 @@
 
           const centerX = rect.left + rect.width / 2;
           const centerY = rect.top + rect.height / 2;
-          const fromPileCenterX = centerX - (panelRect.left + panelRect.width * 0.34);
-          const fromPileCenterY = centerY - (panelRect.top + panelRect.height * 0.52);
+          const fromPileCenterX = centerX - clearOriginX;
+          const fromPileCenterY = centerY - clearOriginY;
           const baseAngle = Math.atan2(fromPileCenterY, fromPileCenterX) * 180 / Math.PI;
           const spreadAngle = Number.isFinite(baseAngle) ? baseAngle : (-115 + 230 * (i + .5) / Math.max(1, ids.length));
           const angle = spreadAngle + ((i % 5) - 2) * 11;
@@ -4961,7 +5055,7 @@
 
         if (mode === 'Explode') {
           for (let i = 0; i < Math.min(24, ids.length + 10); i++) {
-            animations.push(makeClearSpark(panelRect.left + panelRect.width * 0.30, panelRect.top + panelRect.height * 0.52, i));
+            animations.push(makeClearSpark(clearOriginX, clearOriginY, i));
           }
         }
 
@@ -6659,6 +6753,27 @@
       });
     }
 
+    function trainerMoveMatchesExpert(move, best) {
+      if (!move || !best) return false;
+      if (move.type !== best.type) return false;
+      if (move.type === 'blind') return true;
+      if (move.type !== 'visible') return false;
+      if (move.rank !== best.rank) return false;
+      if (Number(move.count || 1) !== Number(best.count || 1)) return false;
+      if (!!move.overplay !== !!best.overplay) return false;
+      const moveFromHand = Number(move.fromHand || 0);
+      const bestFromHand = Number(best.fromHand || 0);
+      const moveFromFaceUp = Number(move.fromFaceUp || 0);
+      const bestFromFaceUp = Number(best.fromFaceUp || 0);
+      return moveFromHand === bestFromHand && moveFromFaceUp === bestFromFaceUp;
+    }
+
+    function expertMatchPercent(trainer) {
+      const comparisons = Number(trainer?.expertComparisons) || 0;
+      if (!comparisons) return null;
+      return Math.round(((Number(trainer?.expertMatches) || 0) / comparisons) * 100);
+    }
+
     function recordTrainerBeforeMove(move, expertPlan, beforeSim) {
       const t = game.trainer;
       t.turns++;
@@ -6692,6 +6807,10 @@
       if (clearMoves.length && move.type === 'visible' && !move.willClear) t.missedClears++;
       if (duplicateMoves.length && move.type === 'visible' && move.count === 1 && !['A', '2', '10'].includes(move.rank)) t.missedDuplicateDumps++;
       const best = expertPlan?.sequence?.[0];
+      if (best) {
+        t.expertComparisons++;
+        if (trainerMoveMatchesExpert(move, best)) t.expertMatches++;
+      }
       const stopper = endgameBlockContext(beforeSim, 0);
       if (stopper.urgent && isEndgameStopperMove(best)) {
         t.endgameStopperOpportunities++;
@@ -6704,8 +6823,9 @@
       const chosen = describeMove(move);
       const expert = expertPlan?.sequence?.length ? describeSequence(expertPlan.sequence.slice(0, 4)) : 'No expert line available.';
       const chosenExplanation = explainMove(move, beforeSim || game);
-      game.lastTurnAnalysis = { chosen, expert, chosenExplanation, expertExplanation: expertPlan?.explanation || '' };
-      game.trainer.recent.unshift({ chosen, expert, chosenExplanation, expertExplanation: expertPlan?.explanation || '' });
+      const expertMatch = trainerMoveMatchesExpert(move, expertPlan?.sequence?.[0]);
+      game.lastTurnAnalysis = { chosen, expert, chosenExplanation, expertExplanation: expertPlan?.explanation || '', expertMatch };
+      game.trainer.recent.unshift({ chosen, expert, chosenExplanation, expertExplanation: expertPlan?.explanation || '', expertMatch });
       game.trainer.recent = game.trainer.recent.slice(0, 8);
       saveTrainerMemory();
       renderTrainerReport(false);
@@ -6714,8 +6834,10 @@
     function renderTrainerReport(force = false) {
       if (!el.trainerReport) return;
       const t = game.trainer;
+      const expertPct = expertMatchPercent(t);
+      const expertCard = `<div class="trainerCard"><h4>Expert match</h4><p>${expertPct === null ? 'No comparable turns yet.' : `${expertPct}% of your comparable plays have matched the Expert AI's first-choice play (${t.expertMatches}/${t.expertComparisons}).`}</p></div>`;
       if (t.turns < 5) {
-        el.trainerReport.innerHTML = `<div class="trainerCard"><h4>Needs more data</h4><p>I have seen ${t.turns} human turn${t.turns === 1 ? '' : 's'}. I need at least 5 turns before strategy advice is worth trusting.</p></div>`;
+        el.trainerReport.innerHTML = `${expertCard}<div class="trainerCard"><h4>Needs more data</h4><p>I have seen ${t.turns} human turn${t.turns === 1 ? '' : 's'}. I need at least 5 turns before strategy advice is worth trusting.</p></div>`;
         return;
       }
       const strengths = [];
@@ -6733,10 +6855,11 @@
       if (!tips.length) tips.push('No major leaks detected yet. Try comparing your choices to the Expert hint when a turn looks complicated.');
       const recent = t.recent[0];
       el.trainerReport.innerHTML = `
+        ${expertCard}
         <div class="trainerCard"><h4>Current read</h4><p>${t.turns} turns analyzed. ${tips[0]}</p></div>
         <div class="trainerCard"><h4>Strengths</h4><ul>${strengths.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
         <div class="trainerCard"><h4>Things to try</h4><ul>${tips.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
-        ${recent ? `<div class="trainerCard"><h4>Last turn</h4><p><strong>Your play:</strong> ${escapeHtml(recent.chosen)}<br><strong>Expert line:</strong> ${escapeHtml(recent.expert)}</p></div>` : ''}
+        ${recent ? `<div class="trainerCard"><h4>Last turn</h4><p><strong>Your play:</strong> ${escapeHtml(recent.chosen)}<br><strong>Expert line:</strong> ${escapeHtml(recent.expert)}<br><strong>Match:</strong> ${recent.expertMatch ? 'Yes' : 'No'}</p></div>` : ''}
       `;
     }
 
@@ -6866,29 +6989,92 @@
       let startX = 0;
       let startY = 0;
       let startTime = 0;
+      let dragging = false;
+      let lastDx = 0;
       const zone = el.drawer;
       if (!zone) return;
+
+      function resetSwipeStyles(delay = 170) {
+        window.setTimeout(() => {
+          zone.classList.remove('dragging');
+          zone.style.transition = '';
+          zone.style.transform = '';
+          zone.style.willChange = '';
+        }, delay);
+      }
+
+      function finishSwipe(event) {
+        if (!startX) return;
+        const touch = (event.changedTouches && event.changedTouches[0]) || null;
+        const dx = touch ? touch.clientX - startX : lastDx;
+        const elapsed = Math.max(1, performance.now() - startTime);
+        const velocity = dx / elapsed;
+        const activeSubpage = document.querySelector('.subpage.active');
+        const shouldAct = dragging && dx > 0 && (dx > 74 || velocity > 0.46);
+
+        if (shouldAct) {
+          if (activeSubpage) {
+            zone.style.transition = 'transform 165ms ease';
+            zone.style.transform = 'translateX(0)';
+            showHome();
+            resetSwipeStyles(175);
+          } else {
+            zone.style.transition = 'transform 175ms ease';
+            zone.style.transform = 'translateX(100%)';
+            window.setTimeout(() => {
+              zone.classList.remove('open');
+              resetSwipeStyles(0);
+            }, 175);
+          }
+        } else if (dragging) {
+          zone.style.transition = 'transform 160ms ease';
+          zone.style.transform = 'translateX(0)';
+          resetSwipeStyles(170);
+        }
+
+        startX = 0;
+        startY = 0;
+        startTime = 0;
+        dragging = false;
+        lastDx = 0;
+      }
+
       zone.addEventListener('touchstart', event => {
+        if (!zone.classList.contains('open')) return;
         const touch = event.touches && event.touches[0];
         if (!touch) return;
         startX = touch.clientX;
         startY = touch.clientY;
         startTime = performance.now();
+        dragging = false;
+        lastDx = 0;
+        zone.style.willChange = 'transform';
       }, { passive: true });
-      zone.addEventListener('touchend', event => {
-        const touch = event.changedTouches && event.changedTouches[0];
-        if (!touch || !startX) return;
+
+      zone.addEventListener('touchmove', event => {
+        if (!startX || !zone.classList.contains('open')) return;
+        const touch = event.touches && event.touches[0];
+        if (!touch) return;
         const dx = touch.clientX - startX;
         const dy = touch.clientY - startY;
-        const fastEnough = performance.now() - startTime < 850;
-        if (fastEnough && dx > 56 && Math.abs(dx) > Math.abs(dy) * 1.15) {
-          const activeSubpage = document.querySelector('.subpage.active');
-          if (activeSubpage) showHome();
-          else el.drawer.classList.remove('open');
+        const absDx = Math.abs(dx);
+        const absDy = Math.abs(dy);
+        if (!dragging) {
+          if (absDx < 7) return;
+          if (dx <= 0 || absDx < absDy * 1.05) return;
+          dragging = true;
+          zone.classList.add('dragging');
+          zone.style.transition = 'none';
         }
-        startX = 0;
-        startY = 0;
-      }, { passive: true });
+        event.preventDefault();
+        const maxDrag = Math.max(160, zone.getBoundingClientRect().width);
+        const dragX = Math.max(0, Math.min(maxDrag, dx));
+        lastDx = dragX;
+        zone.style.transform = `translateX(${dragX}px)`;
+      }, { passive: false });
+
+      zone.addEventListener('touchend', finishSwipe, { passive: true });
+      zone.addEventListener('touchcancel', finishSwipe, { passive: true });
     }
 
     function bindEvents() {
