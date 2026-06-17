@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Tens</title>
+  <title>Tens Mobile Wired v87</title>
     <link rel="manifest" href="manifest.webmanifest" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#0a5a3c" />
@@ -3108,13 +3108,6 @@
                   </select>
                 </div>
                 <div class="controlRow">
-                  <label for="tenEffect">10 clear effect</label>
-                  <select id="tenEffect">
-                    <option selected>Arcane</option>
-                    <option>None</option>
-                  </select>
-                </div>
-                <div class="controlRow">
                   <div>
                     <div class="controlLabel">Animations</div>
                     <p class="smallHelp">Card tosses and pile-clear effects. Turn this off for instant play.</p>
@@ -3374,7 +3367,6 @@
       aiCount: document.getElementById('aiCount'),
       difficultySelect: document.getElementById('difficultySelect'),
       clearAnimation: document.getElementById('clearAnimation'),
-      tenEffect: document.getElementById('tenEffect'),
       logModal: document.getElementById('logModal'),
       logEntries: document.getElementById('logEntries'),
       choiceModal: document.getElementById('choiceModal'),
@@ -3496,7 +3488,6 @@
         if (typeof saved.pileInlineScores === 'boolean') state.toggles.pileInlineScores = saved.pileInlineScores;
         if (typeof saved.pileInlineLog === 'boolean') state.toggles.pileInlineLog = saved.pileInlineLog;
         if (saved.clearAnimation && el.clearAnimation) el.clearAnimation.value = saved.clearAnimation;
-        if (saved.tenEffect && el.tenEffect) el.tenEffect.value = saved.tenEffect === 'None' ? 'None' : 'Arcane';
         if (saved.customCardBack) setCustomCardBack(saved.customCardBack);
         if (saved.cardBack) setBack(saved.cardBack);
         if (saved.felt) setFelt(saved.felt, saved.feltDeep || makeDarkerColor(saved.felt));
@@ -3520,7 +3511,6 @@
           pileInlineLog: !!state.toggles.pileInlineLog,
           pileInlineScores: !!state.toggles.pileInlineScores,
           clearAnimation: el.clearAnimation ? el.clearAnimation.value : 'Explode',
-          tenEffect: el.tenEffect ? (el.tenEffect.value === 'None' ? 'None' : 'Arcane') : 'Arcane',
           cardBack: state.appearance.cardBack,
           customCardBack: state.appearance.customCardBack,
           felt: state.appearance.felt,
@@ -4374,24 +4364,20 @@
     function flashTenText() {
       if (!animationsEnabled()) return Promise.resolve();
       const anchor = livePileTargetRect();
-      const rawTenEffect = (el.tenEffect && el.tenEffect.value) ? el.tenEffect.value : 'Arcane';
-      if (rawTenEffect === 'None') return Promise.resolve();
-      const effectRaw = 'Arcane';
-      const effectSlug = effectRaw.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       const burst = document.createElement('div');
-      burst.className = `tenBurst effect-${effectSlug}`;
-      burst.innerHTML = `<span class="tenMain">10</span><span class="tenFx fx1">✦</span><span class="tenFx fx2">✦</span><span class="tenFx fx3">✹</span><span class="tenFx fx4">✧</span><span class="tenFx fx5">✧</span><span class="tenFx fx6">✦</span><span class="tenFx fx7">✦</span><span class="tenFx fx8">✹</span><span class="tenFx fx9"></span><span class="tenFx fx10"></span><span class="tenFx fx11"></span><span class="tenFx fx12"></span>`;
+      burst.className = 'tenBurst';
+      burst.innerHTML = `<span class="tenMain">10</span>`;
       burst.style.left = `${anchor.left + anchor.width / 2}px`;
       burst.style.top = `${anchor.top + anchor.height * 0.50}px`;
       document.body.appendChild(burst);
       const anim = burst.animate([
         { transform: 'translate(-50%, -50%) scale(.55)', opacity: 0, filter: 'brightness(1)' },
-        { transform: 'translate(-50%, -50%) scale(1.30)', opacity: 1, filter: 'brightness(1.95)', offset: .16 },
-        { transform: 'translate(-50%, -50%) scale(1.02)', opacity: .82, filter: 'brightness(1.08)', offset: .30 },
-        { transform: 'translate(-50%, -50%) scale(1.22)', opacity: 1, filter: 'brightness(1.88)', offset: .46 },
-        { transform: 'translate(-50%, -50%) scale(1.13)', opacity: 1, filter: 'brightness(1.45)', offset: .82 },
-        { transform: 'translate(-50%, -50%) scale(1.52)', opacity: 0, filter: 'brightness(2.05)' }
-      ], { duration: 1350, easing: 'cubic-bezier(.2,.78,.16,1)', fill: 'forwards' });
+        { transform: 'translate(-50%, -50%) scale(1.30)', opacity: 1, filter: 'brightness(1.80)', offset: .16 },
+        { transform: 'translate(-50%, -50%) scale(1.02)', opacity: .84, filter: 'brightness(1.08)', offset: .30 },
+        { transform: 'translate(-50%, -50%) scale(1.18)', opacity: 1, filter: 'brightness(1.55)', offset: .46 },
+        { transform: 'translate(-50%, -50%) scale(1.10)', opacity: 1, filter: 'brightness(1.28)', offset: .78 },
+        { transform: 'translate(-50%, -50%) scale(1.44)', opacity: 0, filter: 'brightness(1.75)' }
+      ], { duration: 1180, easing: 'cubic-bezier(.2,.78,.16,1)', fill: 'forwards' });
       anim.finished.finally(() => burst.remove()).catch(() => burst.remove());
       return anim.finished.catch(() => {});
     }
@@ -7184,7 +7170,6 @@
       el.aiCount.addEventListener('change', event => { state.aiCount = Number(event.target.value); renderAll(); });
       el.difficultySelect.addEventListener('change', event => { state.difficulty = event.target.value; savePrefs(); renderDifficultyDescriptions(); });
       if (el.clearAnimation) el.clearAnimation.addEventListener('change', savePrefs);
-      if (el.tenEffect) el.tenEffect.addEventListener('change', savePrefs);
       const openLog = document.getElementById('openLog');
       if (openLog) openLog.addEventListener('click', () => { renderLogModal(); el.logModal.classList.add('open'); });
       if (el.quickLogBtn) el.quickLogBtn.addEventListener('click', () => {
