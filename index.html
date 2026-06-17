@@ -3566,7 +3566,9 @@
 
     function saveGameProgress() {
       try {
+        if (game.clearInProgress) return;
         if (!game.players.length || !Object.keys(game.cardsById || {}).length) return;
+        sanitizePileAfterTen(game);
         localStorage.setItem(GAME_KEY, JSON.stringify(buildGameProgressSnapshot()));
       } catch (err) {}
     }
@@ -3608,6 +3610,7 @@
         game.pile = Array.isArray(saved.pile) ? saved.pile.filter(Boolean) : [];
         game.currentValue = saved.currentValue ?? null;
         game.currentCount = Number(saved.currentCount) || 0;
+        sanitizePileAfterTen(game);
         recomputeActive();
         game.turn = Math.max(0, Math.min(game.players.length - 1, Number(saved.turn) || 0));
         game.dealer = Number.isInteger(saved.dealer) ? saved.dealer : -1;
@@ -5137,14 +5140,41 @@
         return;
       }
       const last = sim.cardsById[pile[pile.length - 1]];
+      if (!last) {
+        sim.pile = pile.filter(id => !!sim.cardsById[id]);
+        if (!sim.pile.length) {
+          sim.currentValue = null;
+          sim.currentCount = 0;
+          return;
+        }
+      }
+      const activePile = sim.pile;
+      const activeLast = sim.cardsById[activePile[activePile.length - 1]];
       let count = 0;
-      for (let i = pile.length - 1; i >= 0; i--) {
-        const c = sim.cardsById[pile[i]];
-        if (c && c.rank === last.rank) count++;
+      for (let i = activePile.length - 1; i >= 0; i--) {
+        const c = sim.cardsById[activePile[i]];
+        if (c && c.rank === activeLast.rank) count++;
         else break;
       }
-      sim.currentValue = RVAL[last.rank];
+      sim.currentValue = RVAL[activeLast.rank];
       sim.currentCount = count;
+    }
+
+    function sanitizePileAfterTen(sim = game) {
+      if (!sim || sim.clearInProgress || !Array.isArray(sim.pile) || !sim.pile.length) return false;
+      let lastTenIndex = -1;
+      for (let i = 0; i < sim.pile.length; i++) {
+        const card = sim.cardsById?.[sim.pile[i]];
+        if (card && card.rank === '10') lastTenIndex = i;
+      }
+      if (lastTenIndex < 0) return false;
+
+      // A 10 can never remain in the visible pile/archive after it resolves.
+      // If a refresh/autosave catches the exact clearing moment, drop the cleared
+      // portion through the last 10 and keep only legitimate post-clear plays.
+      sim.pile = sim.pile.slice(lastTenIndex + 1);
+      recomputeActive(sim);
+      return true;
     }
 
     function splitPileLive(sim = game) {
@@ -5290,6 +5320,8 @@
     }
 
     function renderPile() {
+      const correctedTenArchive = sanitizePileAfterTen(game);
+      if (correctedTenArchive) scheduleSaveGameProgress(40);
       const { archive, live } = splitPileLive();
       const centeredLive = !!state.toggles.centerLivePile;
       if (el.pileLayout) el.pileLayout.classList.toggle('centerLive', centeredLive);
@@ -6281,6 +6313,12 @@
         return;
       }
 
+      const projectedCountAfterMove = move.isTen
+        ? 0
+        : (game.currentValue === RVAL[rank] ? game.currentCount + cardIds.length : cardIds.length);
+      const willClearAfterPlay = move.isTen || projectedCountAfterMove >= 4;
+      if (willClearAfterPlay) game.clearInProgress = true;
+
       const motionSources = captureMoveSources(cardIds, playerId);
       const beforeLiveIds = splitPileLive().live.slice();
       removeSelectedCards(player, cardIds);
@@ -6332,19 +6370,25 @@
     async function clearPile(playerId, reason, snapshot) {
       const player = game.players[playerId];
       const clearSnapshot = (snapshot && snapshot.length ? snapshot.slice() : game.pile.slice());
-      showAction(`Pile clears: ${reason}`);
-      addLog('Pile clears', `${reason}. ${playerContinues(player)}.`, clearSnapshot);
-      const isTenClear = String(reason).includes('10');
-      let textPromise = Promise.resolve();
-      if (animationsEnabled()) {
-        textPromise = isTenClear ? flashTenText() : flashClearText();
+      game.clearInProgress = true;
+      try {
+        showAction(`Pile clears: ${reason}`);
+        addLog('Pile clears', `${reason}. ${playerContinues(player)}.`, clearSnapshot);
+        const isTenClear = String(reason).includes('10');
+        let textPromise = Promise.resolve();
+        if (animationsEnabled()) {
+          textPromise = isTenClear ? flashTenText() : flashClearText();
+        }
+        await animatePileClear(clearSnapshot);
+        game.pile = [];
+        recomputeActive();
+        renderAll();
+        await textPromise;
+        if (!player.isHuman) await sleep(AI_CLEAR_MS);
+      } finally {
+        game.clearInProgress = false;
+        scheduleSaveGameProgress(60);
       }
-      await animatePileClear(clearSnapshot);
-      game.pile = [];
-      recomputeActive();
-      renderAll();
-      await textPromise;
-      if (!player.isHuman) await sleep(AI_CLEAR_MS);
     }
 
     async function continueSamePlayer(playerId) {
@@ -6630,6 +6674,11 @@
         await continueSamePlayer(playerId);
         return;
       }
+
+      const projectedBlindCount = card.rank === '10'
+        ? 0
+        : (game.currentValue === RVAL[card.rank] ? game.currentCount + 1 : 1);
+      if (card.rank === '10' || projectedBlindCount >= 4) game.clearInProgress = true;
 
       const beforeLiveIds = splitPileLive().live.slice();
       game.pile.push(cardId);
