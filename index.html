@@ -1574,6 +1574,16 @@
       visibility: visible;
     }
 
+    .stack.tableRevealDownHold .backCard {
+      top: 0;
+      bottom: auto;
+      z-index: 1;
+      visibility: visible;
+      filter: brightness(1);
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     .playerMiniStatus {
       position: absolute;
       right: 4px;
@@ -3906,6 +3916,7 @@
       const nodes = [];
       const motionHoldStacks = new Set();
       const underlayHoldStacks = new Set();
+      const revealDownHoldStacks = new Set();
       const skipTableUp = !!options.skipTableUp;
       const skipTableDown = !!options.skipTableDown;
       const keepTableUnderlay = !!options.keepTableUnderlay;
@@ -3922,8 +3933,14 @@
             if (stack) {
               if (keepTableUnderlay && isTableCard) {
                 // Hide only the played table card so the motion sprite can visibly leave.
-                // Do not hide the stack/back/empty slot underneath it.
-                if (isTableDown || !stack.querySelector('.backCard')) {
+                // During the whole overplay/pickup animation, make the table stack look
+                // exactly like it will after the played card is removed: either the
+                // face-down card is fully exposed at the card position, or the slot is empty.
+                const hasBackUnderlay = !!stack.querySelector('.backCard');
+                if (isTableUp && hasBackUnderlay) {
+                  stack.classList.add('tableRevealDownHold');
+                  revealDownHoldStacks.add(stack);
+                } else {
                   stack.classList.add('tableUnderlayHold');
                   underlayHoldStacks.add(stack);
                 }
@@ -3939,6 +3956,7 @@
         nodes.forEach(node => node.classList.remove('clearSourceHidden'));
         motionHoldStacks.forEach(stack => stack.classList.remove('motionSourceHold'));
         underlayHoldStacks.forEach(stack => stack.classList.remove('tableUnderlayHold'));
+        revealDownHoldStacks.forEach(stack => stack.classList.remove('tableRevealDownHold'));
       };
     }
 
