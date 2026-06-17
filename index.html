@@ -1922,7 +1922,7 @@
       color: #fff7d2;
       background: rgba(7, 11, 22, 0.94);
       border: 1px solid rgba(240,202,104,0.78);
-      box-shadow: 0 0 0 2px rgba(240,202,104,0.12), 0 14px 32px rgba(0,0,0,0.44), 0 0 18px rgba(240,202,104,0.30);
+      box-shadow: 0 0 0 1px rgba(240,202,104,0.16), 0 14px 32px rgba(0,0,0,0.44);
       transform: translate3d(-50%, -50%, 0);
       transform-origin: center center;
       will-change: transform, opacity;
@@ -1931,6 +1931,7 @@
       backface-visibility: hidden;
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
+      filter: none;
     }
 
     .pickupCountBurst.pillMorph {
@@ -1951,8 +1952,8 @@
     }
 
     .pickupCountBurst.glow {
-      box-shadow: 0 0 0 2px rgba(240,202,104,0.20), 0 0 22px rgba(240,202,104,0.72), 0 0 42px rgba(255,231,152,0.42), 0 14px 32px rgba(0,0,0,0.44);
-      filter: brightness(1.22);
+      box-shadow: 0 0 0 1px rgba(240,202,104,0.16), 0 14px 32px rgba(0,0,0,0.44);
+      filter: none;
     }
 
     .handPill.pickupHidden {
@@ -4535,10 +4536,10 @@
         const startTransform = 'translate3d(-50%, -50%, 0) scale(1)';
 
         const phase1 = burst.animate([
-          { transform: startTransform, opacity: 1, filter: 'brightness(1)' },
-          { transform: `translate3d(calc(-50% + ${centerDx * .38}px), calc(-50% + ${centerDy * .38}px), 0) scale(${Math.max(1.35, centerScale * .48)})`, opacity: 1, filter: 'brightness(1.04)', offset: .34 },
-          { transform: `translate3d(calc(-50% + ${centerDx * .82}px), calc(-50% + ${centerDy * .82}px), 0) scale(${centerScale * .93})`, opacity: 1, filter: 'brightness(1.08)', offset: .74 },
-          { transform: centerTransform, opacity: 1, filter: 'brightness(1.03)' }
+          { transform: startTransform, opacity: 1, filter: 'none' },
+          { transform: `translate3d(calc(-50% + ${centerDx * .38}px), calc(-50% + ${centerDy * .38}px), 0) scale(${Math.max(1.35, centerScale * .48)})`, opacity: 1, filter: 'none', offset: .34 },
+          { transform: `translate3d(calc(-50% + ${centerDx * .82}px), calc(-50% + ${centerDy * .82}px), 0) scale(${centerScale * .93})`, opacity: 1, filter: 'none', offset: .74 },
+          { transform: centerTransform, opacity: 1, filter: 'none' }
         ], { duration: 465, easing: 'cubic-bezier(.20,.82,.22,1)', fill: 'forwards' });
 
         await phase1.finished.catch(() => {});
@@ -4565,18 +4566,16 @@
         burst.style.padding = finalPillStyle.padding;
         burst.style.borderRadius = finalPillStyle.borderRadius;
         burst.textContent = `H: ${newCount}`;
-        burst.classList.add('glow');
+        
 
         const pulse = burst.animate([
-          { transform: centerTransform, opacity: 1, filter: 'brightness(1.20)' },
-          { transform: `translate3d(calc(-50% + ${centerDx}px), calc(-50% + ${centerDy}px), 0) scale(${centerScale * 1.17})`, opacity: 1, filter: 'brightness(1.34)', offset: .44 },
-          { transform: centerTransform, opacity: 1, filter: 'brightness(1.16)' }
+          { transform: centerTransform, opacity: 1, filter: 'none' },
+          { transform: `translate3d(calc(-50% + ${centerDx}px), calc(-50% + ${centerDy}px), 0) scale(${centerScale * 1.17})`, opacity: 1, filter: 'none', offset: .44 },
+          { transform: centerTransform, opacity: 1, filter: 'none' }
         ], { duration: 420, easing: 'cubic-bezier(.18,.76,.22,1)', fill: 'forwards' });
 
         await pulse.finished.catch(() => {});
         await sleep(80);
-
-        burst.classList.remove('glow');
 
         // Finish the return by animating the badge's real fixed rectangle into the
         // final pill rectangle. This avoids ending on a transformed clone that can
@@ -4613,7 +4612,7 @@
             padding: scaleCssLengths(basePad, scaleForReturn),
             borderRadius: '999px',
             opacity: 1,
-            filter: 'brightness(1.13)'
+            filter: 'none'
           },
           {
             left: `${centerVisualRect.left + (finalPillRect.left - centerVisualRect.left) * .54}px`,
@@ -4624,7 +4623,7 @@
             padding: scaleCssLengths(basePad, Math.max(1.35, scaleForReturn * .48)),
             borderRadius: '999px',
             opacity: .98,
-            filter: 'brightness(1.07)',
+            filter: 'none',
             offset: .52
           },
           {
@@ -4636,7 +4635,7 @@
             padding: finalPillStyle.padding,
             borderRadius: finalPillStyle.borderRadius,
             opacity: 1,
-            filter: 'brightness(1)'
+            filter: 'none'
           }
         ], { duration: 575, easing: 'cubic-bezier(.22,.82,.22,1)', fill: 'forwards' });
 
@@ -4655,7 +4654,7 @@
         burst.style.padding = finalPillStyle.padding;
         burst.style.borderRadius = finalPillStyle.borderRadius;
         burst.style.opacity = '1';
-        burst.style.filter = 'brightness(1)';
+        burst.style.filter = 'none';
 
         // The clone is now an exact fixed-position match for the real badge, so the
         // real badge can return underneath it without a size snap.
@@ -4663,8 +4662,8 @@
         pillRestored = true;
         await new Promise(resolve => requestAnimationFrame(resolve));
         const settleFade = burst.animate([
-          { opacity: 1, filter: 'brightness(1)' },
-          { opacity: 0, filter: 'brightness(1)' }
+          { opacity: 1, filter: 'none' },
+          { opacity: 0, filter: 'none' }
         ], { duration: 70, easing: 'linear', fill: 'forwards' });
         await settleFade.finished.catch(() => {});
       } finally {
