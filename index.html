@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Tens Mobile Wired v87</title>
+  <title>Tens Mobile Wired v98</title>
     <link rel="manifest" href="manifest.webmanifest" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#0a5a3c" />
@@ -509,7 +509,6 @@
     .pileLayout.centerLive .pileCurrentWrap {
       border-left: 1px solid rgba(255,255,255,0.08);
       border-right: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 0 0 1px rgba(240,202,104,0.10), 0 0 22px rgba(240,202,104,0.12);
     }
 
     .pileInlineLog {
@@ -517,11 +516,11 @@
       min-width: 0;
       height: 100%;
       overflow: hidden;
-      padding: 3px 4px 25px;
-      border-left: 1px solid rgba(255,255,255,0.10);
+      padding: 4px 4px 25px;
+      border-left: 1px solid rgba(255,255,255,0.08);
       border-radius: 9px;
-      background: linear-gradient(180deg, rgba(7, 12, 18, 0.58), rgba(0,0,0,0.24));
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.045);
+      background: transparent;
+      box-shadow: none;
     }
 
     .pileLayout.centerLive .pileInlineLog {
@@ -534,32 +533,32 @@
 
     .pileSideTitle {
       color: #fff1bd;
-      font-size: 0.48rem;
+      font-size: 0.58rem;
       font-weight: 1000;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      margin: 0 0 2px;
-      opacity: .85;
+      margin: 0 0 3px;
+      opacity: .9;
       line-height: 1;
     }
 
     .pileScoreList {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 3px;
     }
 
     .pileScoreRow {
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 4px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 5px;
       align-items: center;
-      min-height: 14px;
-      padding: 2px 4px;
-      border-radius: 7px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+      min-height: 18px;
+      padding: 3px 5px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.075);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.025);
     }
 
     .pileScoreRow.you {
@@ -572,26 +571,26 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-size: 0.53rem;
+      font-size: 0.66rem;
       line-height: 1;
       font-weight: 1000;
       color: #f7fbfd;
     }
 
     .pileScoreValue {
-      min-width: 22px;
+      min-width: 25px;
       text-align: right;
-      font-size: 0.62rem;
+      font-size: 0.76rem;
       line-height: 1;
       font-weight: 1000;
       color: var(--gold);
-      text-shadow: 0 0 8px rgba(240,202,104,0.18);
+      text-shadow: 0 0 8px rgba(240,202,104,0.14);
     }
 
     .pileInlineLogEntry {
       border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding: 3px 0 4px;
-      line-height: 1.12;
+      padding: 4px 0 5px;
+      line-height: 1.16;
     }
 
     .pileInlineLogEntry:last-child {
@@ -601,7 +600,7 @@
     .pileInlineLogEntry strong {
       display: block;
       color: var(--gold);
-      font-size: 0.58rem;
+      font-size: 0.68rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -610,9 +609,9 @@
     .pileInlineLogEntry span {
       display: block;
       color: #d9e5ea;
-      font-size: 0.55rem;
-      line-height: 1.14;
-      margin-top: 1px;
+      font-size: 0.62rem;
+      line-height: 1.16;
+      margin-top: 2px;
     }
 
     .quickLogBtn.on {
@@ -647,7 +646,6 @@
       place-items: center;
       position: relative;
       border-right: 1px solid rgba(255,255,255,0.08);
-      background: radial-gradient(circle at 50% 50%, rgba(240,202,104,0.15), transparent 64%);
       border-radius: 9px;
     }
 
@@ -664,9 +662,8 @@
     .pileCurrentCardSlot .card {
       --card-w: var(--pile-current-card-w);
       --card-h: var(--pile-current-card-h);
-      outline: 2px solid rgba(240,202,104,0.70);
-      outline-offset: -2px;
-      box-shadow: 0 0 0 2px rgba(240,202,104,0.14), 0 6px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.35);
+      outline: none;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.35);
     }
 
     .liveCardStack {
@@ -740,7 +737,7 @@
       align-items: center;
       justify-items: center;
       gap: 3px;
-      padding: 3px 18px 3px 3px;
+      padding: 3px 26px 3px 3px;
     }
 
     .myTablePanel .badge {
@@ -837,7 +834,7 @@
     /* Drawer */
     .drawer {
       position: fixed;
-      z-index: 20;
+      z-index: 5000;
       top: 0;
       right: var(--board-side-gap);
       height: 100dvh;
@@ -861,7 +858,7 @@
     .drawerTab {
       position: absolute;
       left: -21px;
-      top: calc(50% - 31px);
+      top: calc(61.5dvh - 31px);
       width: 21px;
       height: 62px;
       border: 1px solid rgba(255,255,255,0.22);
@@ -1521,17 +1518,232 @@
 
 
 
+
+    /* Extra polish animations v88 */
+    .opponent.turnSpotlight::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 10px;
+      pointer-events: none;
+      border: 3px solid rgba(240,202,104,0.0);
+      background: radial-gradient(circle at 50% 50%, rgba(240,202,104,.22), transparent 62%);
+      animation: opponentTurnSpotlight 1120ms cubic-bezier(.2,.78,.18,1) both;
+      z-index: 5;
+    }
+
+    @keyframes opponentTurnSpotlight {
+      0% { border-color: rgba(240,202,104,0); box-shadow: 0 0 0 rgba(240,202,104,0); opacity: 0; transform: scale(.97); }
+      20% { border-color: rgba(255,235,146,1); box-shadow: 0 0 0 2px rgba(240,202,104,.20), 0 0 26px rgba(240,202,104,.55), inset 0 0 18px rgba(240,202,104,.20); opacity: 1; transform: scale(1.015); }
+      55% { border-color: rgba(240,202,104,.88); box-shadow: 0 0 24px rgba(240,202,104,.44), inset 0 0 14px rgba(240,202,104,.16); opacity: .92; transform: scale(1); }
+      100% { border-color: rgba(240,202,104,0); box-shadow: 0 0 0 rgba(240,202,104,0); opacity: 0; transform: scale(1.02); }
+    }
+
+    .opponent.handDanger .handPill {
+      border-color: rgba(255, 210, 80, .95);
+      box-shadow: 0 0 0 1px rgba(240,202,104,.18), 0 0 12px rgba(240,202,104,.38), 0 2px 7px rgba(0,0,0,.44);
+      animation: handDangerPop 820ms cubic-bezier(.22,.78,.18,1) both;
+    }
+
+    .opponent.handCritical .handPill {
+      border-color: rgba(255, 110, 110, .95);
+      color: #fff3d2;
+      box-shadow: 0 0 0 1px rgba(255,110,110,.22), 0 0 14px rgba(255,110,110,.42), 0 2px 7px rgba(0,0,0,.44);
+    }
+
+    @keyframes handDangerPop {
+      0% { transform: scale(1); }
+      36% { transform: scale(1.34); }
+      100% { transform: scale(1); }
+    }
+
+    .lastCardWarning {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 10;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,88,88,.98), rgba(126,0,0,.94));
+      color: #fff7d8;
+      border: 1px solid rgba(255,255,255,.34);
+      font-size: clamp(.82rem, 4vw, 1.12rem);
+      line-height: 1;
+      font-weight: 1000;
+      letter-spacing: .06em;
+      text-shadow: 0 1px 2px rgba(0,0,0,.42);
+      box-shadow: 0 0 0 3px rgba(255,80,80,.14), 0 14px 32px rgba(0,0,0,.44);
+      pointer-events: none;
+      white-space: nowrap;
+      animation: lastCardBadgeInOut 2300ms cubic-bezier(.2,.78,.18,1) both;
+    }
+
+    @keyframes lastCardBadgeInOut {
+      0% { transform: translate(-50%, -50%) scale(.62); opacity: 0; }
+      14% { transform: translate(-50%, -50%) scale(1.12); opacity: 1; }
+      24% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      78% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(.92); opacity: 0; }
+    }
+
+    .turnRacerOverlay {
+      --racer-color: var(--turn-outline-color, #f0ca68);
+      position: fixed;
+      z-index: 18;
+      pointer-events: none;
+      border-radius: 10px;
+      padding: 3px;
+      opacity: 0;
+      transition: opacity 120ms ease;
+      background: conic-gradient(from var(--racer-angle), transparent 0deg 245deg, var(--racer-color) 286deg, rgba(255,255,255,.95) 302deg, var(--racer-color) 318deg, transparent 360deg);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: turnBorderRace 2.75s linear infinite;
+      filter: drop-shadow(0 0 5px color-mix(in srgb, var(--racer-color) 70%, transparent));
+    }
+
+    .turnRacerOverlay.show {
+      opacity: 1;
+    }
+
+    .turnRacerOverlay.static {
+      padding: 0;
+      border: 3px solid var(--racer-color);
+      background: transparent;
+      -webkit-mask: none;
+      mask: none;
+      animation: none;
+      box-shadow: 0 0 16px color-mix(in srgb, var(--racer-color) 42%, transparent), inset 0 0 12px color-mix(in srgb, var(--racer-color) 18%, transparent);
+      filter: none;
+    }
+
+    .turnRacerOverlay.rainbow {
+      background: conic-gradient(from var(--racer-angle), #ff4b4b, #ffb13b, #fff15c, #43e66d, #4bd9ff, #7862ff, #ff5ee6, #ff4b4b);
+    }
+
+    @property --racer-angle {
+      syntax: '<angle>';
+      inherits: false;
+      initial-value: 0deg;
+    }
+
+    @keyframes turnBorderRace {
+      to { --racer-angle: 360deg; }
+    }
+
+    .opponentHandFocusClone {
+      position: fixed;
+      z-index: 80;
+      pointer-events: none;
+      border-radius: 999px;
+      padding: 2px 6px;
+      line-height: 1;
+      font-weight: 1000;
+      background: rgba(7, 11, 22, 0.94);
+      color: #fff7d2;
+      border: 1px solid rgba(240,202,104,0.78);
+      box-shadow: 0 0 0 1px rgba(240,202,104,.18), 0 14px 32px rgba(0,0,0,.44);
+      transform: translate3d(-50%, -50%, 0);
+      transform-origin: center center;
+      will-change: transform, opacity;
+      white-space: nowrap;
+    }
+
+    .blindFlipSprite {
+      position: fixed;
+      z-index: 80;
+      pointer-events: none;
+      will-change: left, top, width, height, transform, opacity;
+      transform-origin: center center;
+      filter: drop-shadow(0 18px 28px rgba(0,0,0,.48));
+    }
+
+    .blindFlipSprite .card,
+    .blindFlipSprite .backCard {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: visible;
+    }
+
+    .pilePanel.overplayImpact {
+      animation: overplayPanelImpact 560ms cubic-bezier(.16,.76,.18,1) both;
+    }
+
+    @keyframes overplayPanelImpact {
+      0% { box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 14px rgba(0,0,0,0.24); filter: brightness(1); }
+      28% { box-shadow: inset 0 0 0 2px rgba(255,92,92,.78), 0 0 26px rgba(255,76,76,.36), 0 4px 14px rgba(0,0,0,0.24); filter: brightness(1.12); }
+      100% { box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 14px rgba(0,0,0,0.24); filter: brightness(1); }
+    }
+
+    .pileCurrentWrap.tenPullIn,
+    .pileArchiveGrid.tenPullIn {
+      animation: tenPullInPulse 420ms cubic-bezier(.2,.78,.18,1) both;
+    }
+
+    @keyframes tenPullInPulse {
+      0% { transform: scale(1); filter: brightness(1); }
+      45% { transform: scale(.94); filter: brightness(1.18); }
+      100% { transform: scale(1); filter: brightness(1); }
+    }
+
+    .freshPileSparkle {
+      position: fixed;
+      z-index: 22;
+      pointer-events: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,241,188,.95);
+      box-shadow: 0 0 12px rgba(240,202,104,.9), 0 0 22px rgba(126,225,255,.44);
+      transform: translate(-50%, -50%) scale(.25);
+      animation: freshPileSpark 720ms cubic-bezier(.2,.78,.18,1) forwards;
+    }
+
+    @keyframes freshPileSpark {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(.2); }
+      18% { opacity: 1; }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.15); }
+    }
+
+    .roundTinyCard.pointCard {
+      border-color: rgba(240,202,104,.62);
+      background: rgba(240,202,104,.14);
+      color: #fff1bd;
+      box-shadow: 0 0 10px rgba(240,202,104,.18);
+      animation: pointCardGlow 900ms cubic-bezier(.2,.78,.18,1) both;
+    }
+
+    @keyframes pointCardGlow {
+      0% { transform: scale(.92); filter: brightness(.9); }
+      42% { transform: scale(1.12); filter: brightness(1.28); }
+      100% { transform: scale(1); filter: brightness(1); }
+    }
+
+    .toast.show {
+      animation: toastOvershoot 260ms cubic-bezier(.16,.78,.18,1) both;
+    }
+
+    @keyframes toastOvershoot {
+      0% { opacity: 0; transform: translateX(-50%) translateY(24px) scale(.96); }
+      70% { opacity: 1; transform: translateX(-50%) translateY(-3px) scale(1.02); }
+      100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+    }
+
+    .trainerReport.animateIn .trainerCard {
+      animation: trainerCardIn 360ms cubic-bezier(.2,.78,.18,1) both;
+      animation-delay: calc(var(--trainer-i, 0) * 55ms);
+    }
+
+    @keyframes trainerCardIn {
+      0% { transform: translateY(8px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
     /* Wiring additions */
-    .opponent.turnGlow,
-    .myTablePanel.turnGlow,
-    .handPanel.turnGlow {
-      box-shadow: inset 0 0 0 2px rgba(240,202,104,0.60), 0 0 18px rgba(240,202,104,0.22);
-    }
-
-    .opponent.turnGlow .oppName {
-      color: var(--gold);
-    }
-
     .card.playable,
     .backCard.playable {
       outline: 2px solid rgba(240,202,104,0.72);
@@ -3080,6 +3292,40 @@
                   <label for="customFelt">Custom felt color</label>
                   <input type="color" id="customFelt" value="#0a5a3c" />
                 </div>
+                <div class="nestedSettingsBlock">
+                  <button class="sectionHeader collapsed" type="button" data-collapse-target="turnBorderSettingsContent"><span>Turn border</span><small id="turnBorderSummary">None</small><span class="chevron">⌄</span></button>
+                  <div class="sectionContent collapsed" id="turnBorderSettingsContent">
+                    <div class="controlRow">
+                      <label for="turnBorderStyle">Indicator style</label>
+                      <select id="turnBorderStyle">
+                        <option value="none">None</option>
+                        <option value="static">Static border</option>
+                        <option value="racer" selected>Border racer</option>
+                        <option value="rainbow">Rainbow racer</option>
+                      </select>
+                    </div>
+                    <div class="controlRow">
+                      <label for="turnBorderPreset">Border color</label>
+                      <select id="turnBorderPreset">
+                        <option value="none" selected>None</option>
+                        <option value="gold">Gold</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                        <option value="red">Red</option>
+                        <option value="purple">Purple</option>
+                        <option value="white">White</option>
+                        <option value="custom">Custom</option>
+                      </select>
+                    </div>
+                    <div class="controlRow">
+                      <label for="turnBorderColor">Custom color</label>
+                      <div style="display:flex;gap:6px;align-items:center;justify-content:flex-end;max-width:62%">
+                        <input type="color" id="turnBorderColor" value="#f0ca68" />
+                        <button class="miniBtn" type="button" id="resetTurnBorderColor" style="min-height:30px;padding:5px 8px">Reset</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -3113,6 +3359,20 @@
                     <p class="smallHelp">Card tosses and pile-clear effects. Turn this off for instant play.</p>
                   </div>
                   <button class="toggle on" data-toggle="animations" aria-label="Toggle animations"></button>
+                </div>
+                <div class="controlRow">
+                  <div>
+                    <div class="controlLabel">Multi-card fan-in</div>
+                    <p class="smallHelp">When multiple cards move to the pile, they fan slightly while traveling.</p>
+                  </div>
+                  <button class="toggle on" data-toggle="multiCardFanIn" aria-label="Toggle multi-card fan-in"></button>
+                </div>
+                <div class="controlRow">
+                  <div>
+                    <div class="controlLabel">Count pickup one-by-one</div>
+                    <p class="smallHelp">When an opponent takes the pile, the enlarged hand count can tick upward one number at a time.</p>
+                  </div>
+                  <button class="toggle" data-toggle="overplayCountSteps" aria-label="Toggle one-by-one pickup count"></button>
                 </div>
                 <div class="controlRow">
                   <div>
@@ -3278,11 +3538,13 @@
     const state = {
       aiCount: 4,
       difficulty: 'Adaptive',
-      appearance: { cardBack: 'classic', customCardBack: '#1e4e8c', felt: '#0a5a3c', feltDeep: '#084a33' },
+      appearance: { cardBack: 'classic', customCardBack: '#1e4e8c', felt: '#0a5a3c', feltDeep: '#084a33', turnBorderStyle: 'racer', turnBorderPreset: 'gold', turnBorderColor: '#f0ca68' },
       selectedCardId: null,
       toggles: {
         autoPlay: true,
         animations: true,
+        multiCardFanIn: true,
+        overplayCountSteps: true,
         centerLivePile: true,
         pileInlineLog: false,
         pileInlineScores: true,
@@ -3390,7 +3652,12 @@
       newGameCancelX: document.getElementById('newGameCancelX'),
       newGameConfirmBtn: document.getElementById('newGameConfirmBtn'),
       customCardBack: document.getElementById('customCardBack'),
-      customFelt: document.getElementById('customFelt')
+      customFelt: document.getElementById('customFelt'),
+      turnBorderStyle: document.getElementById('turnBorderStyle'),
+      turnBorderPreset: document.getElementById('turnBorderPreset'),
+      turnBorderColor: document.getElementById('turnBorderColor'),
+      resetTurnBorderColor: document.getElementById('resetTurnBorderColor'),
+      turnBorderSummary: document.getElementById('turnBorderSummary')
     };
 
     function freshTrainer() {
@@ -3480,6 +3747,8 @@
           el.difficultySelect.value = state.difficulty;
         }
         if (typeof saved.animations === 'boolean') state.toggles.animations = saved.animations;
+        if (typeof saved.multiCardFanIn === 'boolean') state.toggles.multiCardFanIn = saved.multiCardFanIn;
+        if (typeof saved.overplayCountSteps === 'boolean') state.toggles.overplayCountSteps = saved.overplayCountSteps;
         if (saved.centerLiveDefaultV73 === true && typeof saved.centerLivePile === 'boolean') {
           state.toggles.centerLivePile = saved.centerLivePile;
         } else {
@@ -3491,12 +3760,14 @@
         if (saved.customCardBack) setCustomCardBack(saved.customCardBack);
         if (saved.cardBack) setBack(saved.cardBack);
         if (saved.felt) setFelt(saved.felt, saved.feltDeep || makeDarkerColor(saved.felt));
+        setTurnBorderAppearance(saved.turnBorderStyle || state.appearance.turnBorderStyle, saved.turnBorderColor || state.appearance.turnBorderColor, saved.turnBorderPreset || state.appearance.turnBorderPreset);
       } catch (err) {
         if (el.difficultySelect) el.difficultySelect.value = state.difficulty;
       }
       if (!document.body.dataset.cardback) setBack(state.appearance.cardBack);
       setCustomCardBack(state.appearance.customCardBack);
       setFelt(state.appearance.felt, state.appearance.feltDeep);
+      setTurnBorderAppearance(state.appearance.turnBorderStyle, state.appearance.turnBorderColor);
       if (state.toggles.pileInlineLog && state.toggles.pileInlineScores) state.toggles.pileInlineScores = false;
       syncToggleButtons();
     }
@@ -3506,6 +3777,8 @@
         localStorage.setItem(PREF_KEY, JSON.stringify({
           difficulty: state.difficulty,
           animations: !!state.toggles.animations,
+          multiCardFanIn: !!state.toggles.multiCardFanIn,
+          overplayCountSteps: !!state.toggles.overplayCountSteps,
           centerLiveDefaultV73: true,
           centerLivePile: !!state.toggles.centerLivePile,
           pileInlineLog: !!state.toggles.pileInlineLog,
@@ -3514,7 +3787,10 @@
           cardBack: state.appearance.cardBack,
           customCardBack: state.appearance.customCardBack,
           felt: state.appearance.felt,
-          feltDeep: state.appearance.feltDeep
+          feltDeep: state.appearance.feltDeep,
+          turnBorderStyle: state.appearance.turnBorderStyle,
+          turnBorderPreset: state.appearance.turnBorderPreset,
+          turnBorderColor: state.appearance.turnBorderColor
         }));
       } catch (err) {}
     }
@@ -3762,6 +4038,7 @@
       game.pendingAiToHumanTurnReveal = false;
       game.lastRoundWinnerId = null;
       game.lastRoundSummaries = null;
+      state._lastOpponentHandCounts = {};
       if (!newMatch && !rosterChanged) game.matchOver = false;
 
       const needed = playerCount * 19;
@@ -3835,9 +4112,11 @@
 
     function toast(msg) {
       el.toast.textContent = msg;
+      el.toast.classList.remove('show');
+      void el.toast.offsetWidth;
       el.toast.classList.add('show');
       clearTimeout(toast._t);
-      toast._t = setTimeout(() => el.toast.classList.remove('show'), 1600);
+      toast._t = setTimeout(() => el.toast.classList.remove('show'), 1700);
     }
 
 
@@ -4038,10 +4317,12 @@
           const sprite = buildMotionSprite(id, src);
           if (!sprite) return;
           attachMotionSprite(sprite);
-          const tx = destX - (src.left + src.width / 2) + (i - (cardIds.length - 1) / 2) * 7;
-          const ty = destY - (src.top + src.height / 2) + (i % 2 ? 4 : -4);
-          const lift = -34 - Math.min(24, cardIds.length * 3);
-          const rot = (i - (cardIds.length - 1) / 2) * 6;
+          const fanOn = !!state.toggles.multiCardFanIn && cardIds.length > 1;
+          const fanOffset = fanOn ? i - (cardIds.length - 1) / 2 : 0;
+          const tx = destX - (src.left + src.width / 2) + fanOffset * 10;
+          const ty = destY - (src.top + src.height / 2) + (fanOn ? (i % 2 ? 5 : -5) : 0);
+          const lift = -34 - Math.min(24, cardIds.length * 3) - (fanOn ? Math.abs(fanOffset) * 4 : 0);
+          const rot = fanOn ? fanOffset * 8 : 0;
           const arrivalScale = scaleToMatchTarget(src, targetRect, 1);
           const midScale = arrivalScale >= 1 ? Math.min(arrivalScale * 0.94, 1.16) : Math.max(arrivalScale * 1.08, 0.82);
           const anim = sprite.animate([
@@ -4209,8 +4490,13 @@
       });
     }
 
-    async function animatePlayIntoLiveAndShiftArchive(cardIds, playerId, sourceRects, shiftedLiveIds) {
+    async function animatePlayIntoLiveAndShiftArchive(cardIds, playerId, sourceRects, shiftedLiveIds, options = {}) {
       const ids = [...new Set((shiftedLiveIds || []).filter(Boolean))];
+      if (options.skipIncoming) {
+        if (ids.length) await animateLiveCardsToArchive(ids);
+        else renderAll();
+        return;
+      }
       if (!animationsEnabled()) {
         if (ids.length) {
           const playPromise = animateCardsToPile(cardIds, playerId, sourceRects);
@@ -4386,6 +4672,7 @@
       if (!animationsEnabled() || !cardIds.length) return null;
       const keepSourcesHidden = !!options.keepSourcesHidden;
       const badgePromise = flashOverplayText();
+      pulsePileOverplayWarning();
       if (el.pileCurrentCard) el.pileCurrentCard.classList.add('overplayShrink');
 
       const targetRect = livePileTargetRect();
@@ -4553,7 +4840,18 @@
 
         // The count should change exactly when the pickup cards finish hitting the centered count.
         await hitPromise.catch(() => {});
-        pill.textContent = `H: ${newCount}`;
+        if (state.toggles.overplayCountSteps && newCount > oldCount) {
+          const maxSteps = Math.min(24, newCount - oldCount);
+          const stepDelay = Math.max(22, Math.min(58, 720 / Math.max(1, maxSteps)));
+          for (let value = oldCount + 1; value <= newCount; value++) {
+            pill.textContent = `H: ${value}`;
+            burst.textContent = `H: ${value}`;
+            await sleep(stepDelay);
+          }
+        } else {
+          pill.textContent = `H: ${newCount}`;
+          burst.textContent = `H: ${newCount}`;
+        }
         await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         const finalPillRect = pill.getBoundingClientRect();
         const finalCenterX = finalPillRect.left + finalPillRect.width / 2;
@@ -5228,6 +5526,210 @@
       return back;
     }
 
+
+    function animateOpponentHandBadgeFocus(playerId) {
+      const pill = document.querySelector(`[data-player-id="${playerId}"] .handPill`);
+      const panel = document.querySelector(`[data-player-id="${playerId}"]`);
+      if (!pill || !panel || !animationsEnabled()) return;
+      const pillRect = pill.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      const pillStyle = getComputedStyle(pill);
+      const startCenterX = pillRect.left + pillRect.width / 2;
+      const startCenterY = pillRect.top + pillRect.height / 2;
+      const panelCenterX = panelRect.left + panelRect.width / 2;
+      const panelCenterY = panelRect.top + panelRect.height / 2;
+      const clone = document.createElement('div');
+      clone.className = 'opponentHandFocusClone';
+      clone.textContent = pill.textContent || '';
+      clone.style.left = `${startCenterX}px`;
+      clone.style.top = `${startCenterY}px`;
+      clone.style.width = `${Math.max(1, pillRect.width)}px`;
+      clone.style.height = `${Math.max(1, pillRect.height)}px`;
+      clone.style.fontSize = pillStyle.fontSize;
+      clone.style.fontWeight = pillStyle.fontWeight;
+      clone.style.fontFamily = pillStyle.fontFamily;
+      clone.style.lineHeight = pillStyle.lineHeight;
+      clone.style.letterSpacing = pillStyle.letterSpacing;
+      clone.style.padding = pillStyle.padding;
+      document.body.appendChild(clone);
+      pill.classList.add('pickupHidden');
+      const dx = panelCenterX - startCenterX;
+      const dy = panelCenterY - startCenterY;
+      const targetW = Math.max(74, Math.min(118, panelRect.width * .76));
+      const targetH = Math.max(38, Math.min(62, panelRect.height * .70));
+      const scale = Math.max(2.35, Math.min(4.8, Math.min(targetW / Math.max(1, pillRect.width), targetH / Math.max(1, pillRect.height))));
+      const big = `translate3d(calc(-50% + ${dx}px), calc(-50% + ${dy}px), 0) scale(${scale})`;
+      const small = 'translate3d(-50%, -50%, 0) scale(1)';
+      const anim = clone.animate([
+        { transform: small, opacity: 1, offset: 0 },
+        { transform: big, opacity: 1, offset: .18 },
+        { transform: big, opacity: 1, offset: .76 },
+        { transform: small, opacity: 1, offset: 1 }
+      ], { duration: 2150, easing: 'cubic-bezier(.2,.78,.18,1)', fill: 'forwards' });
+      anim.finished.finally(() => {
+        clone.remove();
+        pill.classList.remove('pickupHidden');
+      }).catch(() => {
+        clone.remove();
+        pill.classList.remove('pickupHidden');
+      });
+    }
+
+    function pulsePileOverplayWarning() {
+      if (!animationsEnabled() || !el.pilePanel) return;
+      el.pilePanel.classList.remove('overplayImpact');
+      void el.pilePanel.offsetWidth;
+      el.pilePanel.classList.add('overplayImpact');
+      setTimeout(() => el.pilePanel && el.pilePanel.classList.remove('overplayImpact'), 620);
+    }
+
+    function animateTenClearPullIn() {
+      return Promise.resolve();
+    }
+
+    function sparkleFreshPile() {
+      // Removed.
+    }
+
+    function animateBlindFlipCard(playerId, stackIndex, cardId, card, sourceRects = null) {
+      if (!animationsEnabled() || !card) return Promise.resolve();
+      const src = (sourceRects && sourceRects[0]) || playerSourceRect(playerId);
+      if (!src) return Promise.resolve();
+
+      // The card being flipped is the moving sprite now, so hide the real table/back card
+      // underneath it immediately and leave it hidden until the next render replaces the board.
+      const releaseSourceHold = hideCardSources([cardId], { keepTableUnderlay: false });
+
+      return new Promise(resolve => {
+        const startCenterX = src.left + src.width / 2;
+        const startCenterY = src.top + src.height / 2;
+        const targetRect = livePileTargetRect();
+        const targetCenterX = targetRect.left + targetRect.width / 2;
+        const targetCenterY = targetRect.top + targetRect.height / 2;
+
+        const growW = Math.min(104, Math.max(src.width * 1.34, targetRect.width * 1.18));
+        const growH = growW * CARD_RATIO;
+        const midCenterX = startCenterX + (targetCenterX - startCenterX) * .34;
+        const midCenterY = startCenterY + (targetCenterY - startCenterY) * .20 - 24;
+
+        const wrap = document.createElement('div');
+        wrap.className = 'blindFlipSprite';
+        wrap.style.left = `${src.left}px`;
+        wrap.style.top = `${src.top}px`;
+        wrap.style.width = `${src.width}px`;
+        wrap.style.height = `${src.height}px`;
+
+        const back = createBackCard({ owner: playerId, zone: 'blind-flip', stackIndex, playable: false });
+        const face = createCard(card, { owner: playerId, zone: 'blind-flip', stackIndex, playable: false });
+        face.style.visibility = 'hidden';
+        wrap.appendChild(back);
+        wrap.appendChild(face);
+        document.body.appendChild(wrap);
+        requestAnimationFrame(() => layoutAll());
+
+        const setBox = (cx, cy, w, h, rotateY = 0, rot = 0) => {
+          wrap.style.left = `${cx - w / 2}px`;
+          wrap.style.top = `${cy - h / 2}px`;
+          wrap.style.width = `${w}px`;
+          wrap.style.height = `${h}px`;
+          wrap.style.transform = `rotate(${rot}deg) rotateY(${rotateY}deg) translateZ(0)`;
+          wrap.style.setProperty('--card-w', `${w}px`);
+          wrap.style.setProperty('--card-h', `${h}px`);
+        };
+
+        const lerp = (a, b, t) => a + (b - a) * t;
+        const easeOut = t => 1 - Math.pow(1 - t, 3);
+        const easeInOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        const startAt = performance.now();
+        const flipGrowDur = 330;
+        const travelDur = 520;
+        const total = flipGrowDur + travelDur;
+
+        const step = now => {
+          const elapsed = now - startAt;
+
+          if (elapsed < flipGrowDur) {
+            const raw = Math.max(0, Math.min(1, elapsed / flipGrowDur));
+            const t = easeOut(raw);
+            const cx = lerp(startCenterX, midCenterX, t);
+            const cy = lerp(startCenterY, midCenterY, t);
+            const w = lerp(src.width, growW, t);
+            const h = lerp(src.height, growH, t);
+
+            if (raw >= .48 && face.style.visibility !== 'visible') {
+              back.style.visibility = 'hidden';
+              face.style.visibility = 'visible';
+            }
+
+            // Quick flip without ever showing the face mirrored/backwards.
+            const rotateY = raw < .48 ? lerp(0, 82, raw / .48) : lerp(82, 0, (raw - .48) / .52);
+            setBox(cx, cy, w, h, rotateY, lerp(-2, 0, t));
+          } else {
+            const raw = Math.max(0, Math.min(1, (elapsed - flipGrowDur) / travelDur));
+            const t = easeInOut(raw);
+            const cx = lerp(midCenterX, targetCenterX, t);
+            const cy = lerp(midCenterY, targetCenterY, t);
+            const w = lerp(growW, targetRect.width, t);
+            const h = lerp(growH, targetRect.height, t);
+            setBox(cx, cy, w, h, 0, 0);
+          }
+
+          if (elapsed < total) {
+            requestAnimationFrame(step);
+          } else {
+            setBox(targetCenterX, targetCenterY, targetRect.width, targetRect.height, 0, 0);
+            setTimeout(() => {
+              wrap.remove();
+              setTimeout(() => {
+                if (document.body.contains(wrap)) return;
+                releaseSourceHold();
+              }, 450);
+              resolve();
+            }, 30);
+          }
+        };
+
+        requestAnimationFrame(step);
+      });
+    }
+
+    function animateRoundSummaryScores() {
+      if (!el.roundBody || !animationsEnabled()) return;
+      el.roundBody.querySelectorAll('[data-score-target]').forEach((node, idx) => {
+        const target = Number(node.dataset.scoreTarget) || 0;
+        const prefix = node.dataset.scorePrefix || '';
+        const duration = Math.min(900, 420 + Math.abs(target) * 10);
+        const start = performance.now() + idx * 45;
+        node.classList.add('scoreTicking');
+        const step = now => {
+          if (now < start) {
+            requestAnimationFrame(step);
+            return;
+          }
+          const t = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - t, 3);
+          node.textContent = `${prefix}${Math.round(target * eased)}`;
+          if (t < 1) requestAnimationFrame(step);
+          else node.textContent = `${prefix}${target}`;
+        };
+        requestAnimationFrame(step);
+      });
+    }
+
+    function animateTrainerCardsIn() {
+      if (!el.trainerReport || !animationsEnabled()) return;
+      el.trainerReport.classList.remove('animateIn');
+      el.trainerReport.querySelectorAll('.trainerCard').forEach((card, idx) => {
+        card.style.setProperty('--trainer-i', idx);
+      });
+      void el.trainerReport.offsetWidth;
+      el.trainerReport.classList.add('animateIn');
+      clearTimeout(animateTrainerCardsIn._t);
+      animateTrainerCardsIn._t = setTimeout(() => {
+        if (el.trainerReport) el.trainerReport.classList.remove('animateIn');
+      }, 760);
+    }
+
     function renderOpponents() {
       el.opponentsGrid.innerHTML = '';
       const ais = game.players.slice(1, state.aiCount + 1);
@@ -5239,12 +5741,22 @@
           el.opponentsGrid.appendChild(panel);
           continue;
         }
-        panel.className = `opponent ${i % 2 === 0 ? 'left' : 'right'} ${game.turn === player.id && game.roundActive ? 'turnGlow' : ''}`;
+        const isTurn = game.turn === player.id && game.roundActive;
+        const handCount = player.hand.length;
+        const previousCount = state._lastOpponentHandCounts?.[player.id];
+        const showLastCardBadge = previousCount != null && previousCount > 1 && handCount === 1;
+        const spotlightCls = isTurn && state._lastSpotlightTurn !== game.turn ? ' turnSpotlight' : '';
+        panel.className = `opponent ${i % 2 === 0 ? 'left' : 'right'}${spotlightCls}`;
         panel.dataset.playerId = player.id;
-        panel.innerHTML = `<div class="oppName"><span class="oppNameText">${escapeHtml(player.name)}</span><span class="handPill">H: ${player.hand.length}</span></div><div class="oppStacks"></div>`;
+        panel.innerHTML = `<div class="oppName"><span class="oppNameText">${escapeHtml(player.name)}</span><span class="handPill">H: ${handCount}</span></div>${showLastCardBadge ? '<span class="lastCardWarning">LAST CARD</span>' : ''}<div class="oppStacks"></div>`;
+        applyTurnFrame(panel, isTurn);
+        panel.addEventListener('click', () => animateOpponentHandBadgeFocus(player.id));
         const stacks = panel.querySelector('.oppStacks');
         player.stacks.forEach((stack, stackIndex) => stacks.appendChild(createStackVisual(player, stack, stackIndex, false)));
         el.opponentsGrid.appendChild(panel);
+        if (spotlightCls) setTimeout(() => { state._lastSpotlightTurn = game.turn; }, 900);
+        if (!state._lastOpponentHandCounts) state._lastOpponentHandCounts = {};
+        state._lastOpponentHandCounts[player.id] = handCount;
       }
     }
 
@@ -5284,7 +5796,9 @@
     function renderMyTable() {
       const human = game.players[0];
       el.myTableGrid.innerHTML = '';
-      el.myTablePanel.classList.toggle('turnGlow', game.roundActive && game.turn === 0);
+      const humanTurn = game.roundActive && game.turn === 0;
+      el.myTablePanel.classList.remove('turnGlow');
+      applyTurnFrame(el.myTablePanel, humanTurn);
       if (!human) return;
       human.stacks.forEach((stack, stackIndex) => el.myTableGrid.appendChild(createStackVisual(human, stack, stackIndex, true)));
     }
@@ -5292,7 +5806,9 @@
     function renderHand() {
       const human = game.players[0];
       el.handGrid.innerHTML = '';
-      el.handPanel.classList.toggle('turnGlow', game.roundActive && game.turn === 0);
+      const humanTurn = game.roundActive && game.turn === 0;
+      el.handPanel.classList.remove('turnGlow');
+      applyTurnFrame(el.handPanel, humanTurn);
       if (!human) {
         el.handScenarioBadge.textContent = 'No game';
         el.handScrollBadge.textContent = 'start game';
@@ -5406,7 +5922,10 @@
       renderDifficultyDescriptions();
       renderTrainerReport(false);
       updateStatusText(game.roundActive ? 'Game active.' : 'No active round.');
-      requestAnimationFrame(layoutAll);
+      requestAnimationFrame(() => {
+        layoutAll();
+        updateTurnRacerOverlay();
+      });
       scheduleSaveGameProgress();
     }
 
@@ -5522,6 +6041,7 @@
       layoutPile();
       layoutMyTable();
       layoutHand();
+      updateTurnRacerOverlay();
     }
 
     function getCardLocation(sim, playerId, cardId) {
@@ -6440,7 +6960,8 @@
         const card = game.cardsById[id];
         if (!card) return '';
         const red = card.suit === '♥' || card.suit === '♦' ? ' red' : '';
-        return `<span class="roundTinyCard${red}">${escapeHtml(card.rank)}${state.toggles.showSuits ? escapeHtml(card.suit) : ''}</span>`;
+        const pointCls = cardPoints(id) >= 10 ? ' pointCard' : '';
+        return `<span class="roundTinyCard${red}${pointCls}">${escapeHtml(card.rank)}${state.toggles.showSuits ? escapeHtml(card.suit) : ''}</span>`;
       }).join('');
     }
 
@@ -6652,27 +7173,27 @@
       game.moveNumber++;
       if (!isAi) recordTrainerBeforeMove(move, expertBefore, beforeSim || cloneSim());
 
-      if (!isAi) await showBlindRevealCard(card);
+      await animateBlindFlipCard(playerId, stackIndex, cardId, card, flipSource);
       const overplay = card.rank !== '10' && game.currentValue !== null && RVAL[card.rank] > game.currentValue;
       if (overplay) {
         const snap = game.pile.slice().concat(cardId);
-        let releaseOverplaySources = null;
         addLog(`${playerDoes(player, 'flip', 'flips')} ${card.rank}`, `Blind overplay. ${playerTakesPile(player)} and ${playerContinues(player).toLowerCase()}.`, snap);
         showAction(`${playerDoes(player, 'flip', 'flips')} ${card.rank} — pickup`);
-        try {
-          releaseOverplaySources = await animateOverplayToPile([cardId], playerId, flipSource, { keepSourcesHidden: true });
-          showAction(playerTakesPile(player));
-          const projectedPickupHandCount = player.hand.length + game.pile.length + 1;
-          await animatePilePickup(snap, playerId, {}, projectedPickupHandCount);
-          player.hand.push(cardId, ...game.pile);
-          player.hand = sortCardIds([...new Set(player.hand)]);
-          game.pile = [];
-          recomputeActive();
-          if (!isAi) finalizeTrainerMove(move, expertBefore, beforeSim || cloneSim());
-          renderAll();
-        } finally {
-          if (releaseOverplaySources) releaseOverplaySources();
-        }
+        game.pile.push(cardId);
+        recomputeActive();
+        renderAll();
+        pulsePileOverplayWarning();
+        const badgePromise = flashOverplayText();
+        showAction(playerTakesPile(player));
+        const projectedPickupHandCount = player.hand.length + game.pile.length;
+        await animatePilePickup(game.pile.slice(), playerId, {}, projectedPickupHandCount);
+        await badgePromise;
+        player.hand.push(...game.pile);
+        player.hand = sortCardIds([...new Set(player.hand)]);
+        game.pile = [];
+        recomputeActive();
+        if (!isAi) finalizeTrainerMove(move, expertBefore, beforeSim || cloneSim());
+        renderAll();
         if (isAi) await sleep(Math.max(180, AI_STEP_MS * 0.45));
         if (checkRoundOver(playerId)) return;
         await continueSamePlayer(playerId);
@@ -6689,7 +7210,7 @@
       const shiftedLiveIds = idsMovingFromLiveToArchive(beforeLiveIds);
       addLog(`${playerDoes(player, 'flip', 'flips')} ${card.rank}`, `${card.rank === '10' ? '10 clears the pile.' : 'The flipped card is played.'}`, game.pile.slice());
       showAction(`${playerDoes(player, 'flip', 'flips')} ${card.rank}${card.rank === '10' ? ' — clear' : ''}`);
-      await animatePlayIntoLiveAndShiftArchive([cardId], playerId, flipSource, shiftedLiveIds);
+      await animatePlayIntoLiveAndShiftArchive([cardId], playerId, flipSource, shiftedLiveIds, { skipIncoming: true });
       if (isAi) await sleep(Math.max(280, AI_STEP_MS * 0.38));
 
       if (card.rank === '10') {
@@ -6890,6 +7411,7 @@
       const expertCard = `<div class="trainerCard"><h4>Expert match</h4><p>${expertPct === null ? 'No comparable turns yet.' : `${expertPct}% of your comparable plays have matched the Expert AI's first-choice play (${t.expertMatches}/${t.expertComparisons}).`}</p></div>`;
       if (t.turns < 5) {
         el.trainerReport.innerHTML = `${expertCard}<div class="trainerCard"><h4>Needs more data</h4><p>I have seen ${t.turns} human turn${t.turns === 1 ? '' : 's'}. I need at least 5 turns before strategy advice is worth trusting.</p></div>`;
+        if (force) animateTrainerCardsIn();
         return;
       }
       const strengths = [];
@@ -6913,6 +7435,7 @@
         <div class="trainerCard"><h4>Things to try</h4><ul>${tips.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
         ${recent ? `<div class="trainerCard"><h4>Last turn</h4><p><strong>Your play:</strong> ${escapeHtml(recent.chosen)}<br><strong>Expert line:</strong> ${escapeHtml(recent.expert)}<br><strong>Match:</strong> ${recent.expertMatch ? 'Yes' : 'No'}</p></div>` : ''}
       `;
+      if (force) animateTrainerCardsIn();
     }
 
     function showHint() {
@@ -7002,6 +7525,134 @@
       if (el.customFelt) el.customFelt.value = safe;
     }
 
+    function turnBorderPresetColor(preset) {
+      const map = {
+        none: 'transparent',
+        gold: '#f0ca68',
+        blue: '#4bd9ff',
+        green: '#6ee78d',
+        red: '#ff6969',
+        purple: '#b78cff',
+        white: '#f7fbff'
+      };
+      return map[preset] || '#f0ca68';
+    }
+
+    function normalizeTurnBorderStyle(style) {
+      if (style === 'rainbow') return 'rainbow';
+      if (style === 'static') return 'static';
+      if (style === 'racer') return 'racer';
+      if (['gold', 'blue', 'green', 'red', 'purple', 'white'].includes(style)) return 'racer';
+      return 'none';
+    }
+
+    function turnBorderColorForStyle(style = state.appearance.turnBorderStyle) {
+      if (state.appearance.turnBorderPreset === 'custom') {
+        return /^#[0-9a-fA-F]{6}$/.test(String(state.appearance.turnBorderColor || '')) ? state.appearance.turnBorderColor : '#f0ca68';
+      }
+      if ((style === 'racer' || style === 'rainbow') && state.appearance.turnBorderPreset === 'none') return '#f0ca68';
+      return turnBorderPresetColor(state.appearance.turnBorderPreset || 'none');
+    }
+
+    function syncTurnBorderColorControls() {
+      if (el.turnBorderStyle) el.turnBorderStyle.value = state.appearance.turnBorderStyle;
+      if (el.turnBorderPreset) el.turnBorderPreset.value = state.appearance.turnBorderPreset || 'none';
+      if (el.turnBorderColor) el.turnBorderColor.value = state.appearance.turnBorderColor || '#f0ca68';
+      if (el.turnBorderSummary) {
+        const styleLabels = { none: 'None', static: 'Static', racer: 'Racer', rainbow: 'Rainbow' };
+        const presetLabels = { none: 'No border', gold: 'Gold', blue: 'Blue', green: 'Green', red: 'Red', purple: 'Purple', white: 'White', custom: 'Custom' };
+        const style = state.appearance.turnBorderStyle || 'none';
+        el.turnBorderSummary.textContent = style === 'none' ? 'None' : `${styleLabels[style] || 'Racer'} · ${style === 'rainbow' ? 'Rainbow' : (presetLabels[state.appearance.turnBorderPreset] || 'Gold')}`;
+      }
+    }
+
+    function setTurnBorderAppearance(style = state.appearance.turnBorderStyle, color = state.appearance.turnBorderColor, preset = state.appearance.turnBorderPreset) {
+      const normalizedStyle = normalizeTurnBorderStyle(style);
+      let nextPreset = ['none', 'gold', 'blue', 'green', 'red', 'purple', 'white', 'custom'].includes(preset) ? preset : 'none';
+
+      // Migrate old saved values like "blue" or "green" from the old racer dropdown.
+      if (['gold', 'blue', 'green', 'red', 'purple', 'white'].includes(style)) {
+        nextPreset = style;
+      }
+
+      const nextColor = /^#[0-9a-fA-F]{6}$/.test(String(color || '')) ? color : '#f0ca68';
+      state.appearance.turnBorderStyle = normalizedStyle;
+      state.appearance.turnBorderPreset = nextPreset;
+      state.appearance.turnBorderColor = nextColor;
+
+      const activeColor = turnBorderColorForStyle(normalizedStyle);
+      document.documentElement.style.setProperty('--turn-outline-color', activeColor);
+      document.documentElement.style.setProperty('--turn-racer-color', activeColor);
+      syncTurnBorderColorControls();
+      updateTurnRacerOverlay(true);
+    }
+
+    function turnRacerTargetNode() {
+      if (!game.roundActive || state.appearance.turnBorderStyle === 'none') return null;
+      if (game.turn === 0) return el.handPanel || el.myTablePanel;
+      return document.querySelector(`[data-player-id="${game.turn}"]`);
+    }
+
+    function turnRacerTargetKey() {
+      if (!game.roundActive || state.appearance.turnBorderStyle === 'none') return 'none';
+      return game.turn === 0 ? 'human' : `player-${game.turn}`;
+    }
+
+    function getTurnRacerOverlay() {
+      let overlay = document.getElementById('turnRacerOverlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'turnRacerOverlay';
+        overlay.className = 'turnRacerOverlay';
+        document.body.appendChild(overlay);
+      }
+      return overlay;
+    }
+
+    function updateTurnRacerOverlay(forceInstant = false) {
+      const overlay = getTurnRacerOverlay();
+      const style = state.appearance.turnBorderStyle || 'none';
+      const target = turnRacerTargetNode();
+      const targetKey = turnRacerTargetKey();
+
+      if (!target || style === 'none' || (style === 'static' && state.appearance.turnBorderPreset === 'none') || !target.getClientRects().length) {
+        overlay.classList.remove('show');
+        overlay.dataset.targetKey = '';
+        return;
+      }
+
+      const changedTarget = overlay.dataset.targetKey !== targetKey;
+      const rect = target.getBoundingClientRect();
+      const pad = 2;
+
+      if (changedTarget || forceInstant) {
+        overlay.classList.remove('show');
+        overlay.style.transition = 'none';
+      }
+
+      overlay.style.left = `${rect.left - pad}px`;
+      overlay.style.top = `${rect.top - pad}px`;
+      overlay.style.width = `${rect.width + pad * 2}px`;
+      overlay.style.height = `${rect.height + pad * 2}px`;
+      overlay.style.borderRadius = getComputedStyle(target).borderRadius || '10px';
+      overlay.style.setProperty('--racer-color', turnBorderColorForStyle(style));
+      overlay.classList.toggle('static', style === 'static');
+      overlay.classList.toggle('rainbow', style === 'rainbow');
+      overlay.dataset.targetKey = targetKey;
+
+      if (changedTarget || forceInstant) {
+        void overlay.offsetWidth;
+        overlay.style.transition = 'opacity 120ms ease';
+      }
+      overlay.classList.add('show');
+    }
+
+    function applyTurnFrame(node, active) {
+      if (!node) return;
+      node.classList.remove('turnRacer', 'rainbow');
+      node.style.removeProperty('--racer-color');
+    }
+
     function openNewGameConfirm() {
       if (el.newGameConfirmModal) el.newGameConfirmModal.classList.add('open');
     }
@@ -7032,9 +7683,42 @@
       const content = document.getElementById(targetId);
       if (!content) return;
       const button = document.querySelector(`[data-collapse-target="${targetId}"]`);
-      const collapsed = !content.classList.contains('collapsed');
-      content.classList.toggle('collapsed', collapsed);
-      if (button) button.classList.toggle('collapsed', collapsed);
+      const opening = content.classList.contains('collapsed');
+      if (button) button.classList.toggle('collapsed', !opening);
+      content.style.overflow = 'hidden';
+      if (opening) {
+        content.classList.remove('collapsed');
+        const h = content.scrollHeight;
+        content.style.maxHeight = '0px';
+        content.style.opacity = '0';
+        content.style.transition = 'max-height 220ms cubic-bezier(.2,.78,.18,1), opacity 170ms ease';
+        requestAnimationFrame(() => {
+          content.style.maxHeight = `${h}px`;
+          content.style.opacity = '1';
+        });
+        setTimeout(() => {
+          content.style.maxHeight = '';
+          content.style.opacity = '';
+          content.style.transition = '';
+          content.style.overflow = '';
+        }, 240);
+      } else {
+        const h = content.scrollHeight;
+        content.style.maxHeight = `${h}px`;
+        content.style.opacity = '1';
+        content.style.transition = 'max-height 190ms cubic-bezier(.22,.68,.24,1), opacity 150ms ease';
+        requestAnimationFrame(() => {
+          content.style.maxHeight = '0px';
+          content.style.opacity = '0';
+        });
+        setTimeout(() => {
+          content.classList.add('collapsed');
+          content.style.maxHeight = '';
+          content.style.opacity = '';
+          content.style.transition = '';
+          content.style.overflow = '';
+        }, 210);
+      }
     }
 
     function bindDrawerSwipe() {
@@ -7071,17 +7755,19 @@
             showHome();
             resetSwipeStyles(175);
           } else {
-            zone.style.transition = 'transform 175ms ease';
+            const momentumMs = Math.max(105, Math.min(210, 190 - velocity * 120));
+            zone.style.transition = `transform ${momentumMs}ms cubic-bezier(.16,.78,.18,1)`;
             zone.style.transform = 'translateX(100%)';
             window.setTimeout(() => {
               zone.classList.remove('open');
               resetSwipeStyles(0);
-            }, 175);
+            }, momentumMs);
           }
         } else if (dragging) {
-          zone.style.transition = 'transform 160ms ease';
+          const snapBackMs = Math.max(120, Math.min(210, 185 - Math.abs(velocity) * 70));
+          zone.style.transition = `transform ${snapBackMs}ms cubic-bezier(.16,.78,.18,1)`;
           zone.style.transform = 'translateX(0)';
-          resetSwipeStyles(170);
+          resetSwipeStyles(snapBackMs + 10);
         }
 
         startX = 0;
@@ -7148,6 +7834,16 @@
       document.querySelectorAll('[data-felt]').forEach(btn => btn.addEventListener('click', () => { setFelt(btn.dataset.felt, btn.dataset.feltDeep || makeDarkerColor(btn.dataset.felt)); savePrefs(); }));
       if (el.customFelt) el.customFelt.addEventListener('input', event => { setFelt(event.target.value, makeDarkerColor(event.target.value)); savePrefs(); });
       if (el.customCardBack) el.customCardBack.addEventListener('input', event => { setCustomCardBack(event.target.value); setBack('custom-solid'); savePrefs(); });
+      if (el.turnBorderStyle) el.turnBorderStyle.addEventListener('change', event => { setTurnBorderAppearance(event.target.value, state.appearance.turnBorderColor, state.appearance.turnBorderPreset); savePrefs(); renderAll(); });
+      if (el.turnBorderPreset) el.turnBorderPreset.addEventListener('change', event => {
+        const preset = event.target.value;
+        const color = preset === 'custom' ? state.appearance.turnBorderColor : turnBorderPresetColor(preset);
+        setTurnBorderAppearance(state.appearance.turnBorderStyle, color, preset);
+        savePrefs();
+        renderAll();
+      });
+      if (el.turnBorderColor) el.turnBorderColor.addEventListener('input', event => { setTurnBorderAppearance(state.appearance.turnBorderStyle, event.target.value, 'custom'); savePrefs(); renderAll(); });
+      if (el.resetTurnBorderColor) el.resetTurnBorderColor.addEventListener('click', () => { setTurnBorderAppearance(state.appearance.turnBorderStyle, '#f0ca68', 'none'); savePrefs(); renderAll(); });
 
       document.querySelectorAll('.toggle').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -7162,7 +7858,7 @@
             state.toggles.pileInlineLog = false;
             state.toggles.pileInlineScores = true;
           }
-          if (key === 'animations' || key === 'centerLivePile') savePrefs();
+          if (key === 'animations' || key === 'centerLivePile' || key === 'multiCardFanIn' || key === 'overplayCountSteps') savePrefs();
           renderAll();
         });
       });
