@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Tens Mobile Wired v101</title>
+  <title>Tens Mobile Wired v102</title>
     <link rel="manifest" href="manifest.webmanifest" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#0a5a3c" />
@@ -1347,6 +1347,7 @@
       border-radius: 10px;
       border: 1px solid rgba(255,255,255,0.11);
       background: rgba(0,0,0,0.15);
+      cursor: pointer;
     }
 
     .difficultyItem.active {
@@ -1431,7 +1432,7 @@
     .modalOverlay {
       position: fixed;
       inset: 0;
-      z-index: 40;
+      z-index: 7000;
       display: none;
       background: rgba(0,0,0,0.58);
       padding: calc(16px + var(--safe-top)) 12px calc(16px + var(--safe-bottom));
@@ -1470,6 +1471,11 @@
       min-height: 0;
       overflow-y: auto;
       padding: 10px;
+    }
+
+    .menuLogEntries {
+      max-height: calc(100dvh - 150px);
+      padding: 0;
     }
 
     .logEntry {
@@ -1583,6 +1589,12 @@
 
     .turnRacerOverlay.rainbow {
       background: conic-gradient(from var(--racer-angle), #ff4b4b, #ffb13b, #fff15c, #43e66d, #4bd9ff, #7862ff, #ff5ee6, #ff4b4b);
+    }
+
+    .turnRacerOverlay.dual {
+      background:
+        conic-gradient(from var(--racer-angle), transparent 0deg 236deg, var(--racer-color) 282deg, var(--racer-mix-color, #fff) 301deg, var(--racer-color) 320deg, transparent 360deg),
+        conic-gradient(from calc(360deg - var(--racer-angle)), transparent 0deg 236deg, var(--racer-color-2) 282deg, var(--racer-mix-color, #fff) 301deg, var(--racer-color-2) 320deg, transparent 360deg);
     }
 
     @property --racer-angle {
@@ -2036,6 +2048,14 @@
       min-width: 45px;
     }
 
+    .quickHintBtn {
+      display: none;
+      min-width: 26px;
+      width: 26px;
+      padding-inline: 0;
+      font-size: 0.72rem;
+    }
+
     .pilePanel.centerLiveMode .quickLogBtn {
       right: auto;
       transform: translateX(-50%);
@@ -2051,12 +2071,21 @@
       left: calc(75% + (var(--pile-live-col) / 4) + 24px);
     }
 
+    .pilePanel.centerLiveMode #quickHintBtn {
+      display: inline-flex;
+      left: calc(75% + (var(--pile-live-col) / 4) + 72px);
+    }
+
     .pilePanel.centerLiveMode .quickLogBtn.on {
       min-width: 37px;
     }
 
     .pilePanel.centerLiveMode .quickScoresBtn.on {
       min-width: 45px;
+    }
+
+    .pilePanel.centerLiveMode #quickHintBtn.hidden {
+      display: none;
     }
 
     .pileAction {
@@ -3124,6 +3153,7 @@
       <div class="badge">PILE</div>
       <div class="densityBadge" id="pileDensityBadge">6/row + live</div>
       <button class="quickLogBtn quickScoresBtn" id="quickScoresBtn" type="button">SCORE</button>
+      <button class="quickLogBtn quickHintBtn" id="quickHintBtn" type="button" aria-label="Open hint">?</button>
       <button class="quickLogBtn" id="quickLogBtn" type="button">LOG</button>
       <div class="pileAction" id="pileAction">Ready</div>
       <div class="pileLayout" id="pileLayout">
@@ -3167,7 +3197,7 @@
         <div class="drawerHome active" id="drawerHome">
           <nav class="drawerMenu" aria-label="Top-level drawer items">
             <button class="drawerMenuBtn" data-page="hintPage">Hint <small>strategy help</small></button>
-            <button class="drawerMenuBtn" id="openLogMenuBtn" type="button">Log <small>game history</small></button>
+            <button class="drawerMenuBtn" data-page="logPage" type="button">Log <small>game history</small></button>
             <button class="drawerMenuBtn" data-page="settingsPage">Settings <small>appearance + gameplay</small></button>
             <button class="drawerMenuBtn" data-page="playersPage">Players &amp; Difficulty <small>opponents + difficulty</small></button>
             <button class="drawerMenuBtn" id="startNewGameMenuBtn" type="button">Start New Game <small>deal fresh cards</small></button>
@@ -3183,14 +3213,24 @@
             <button class="trainerBtn primary" id="getHintBtn">Get Expert Hint</button>
             <div class="hintOutput" id="selectedCardOutput">No hint requested yet.</div>
           </div>
-          <div class="sectionBox">
-            <h3>Trainer</h3>
-            <p class="smallHelp">The trainer studies your actual choices over time. It needs enough turns before it starts making confident strategy recommendations.</p>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
-              <button class="trainerBtn" id="trainerBtn">Update Trainer Report</button>
-              <button class="trainerBtn" id="explainLastBtn">Explain Last Turn</button>
+          <div class="sectionBox collapsible">
+            <button class="sectionHeader collapsed" type="button" data-collapse-target="trainerSettingsContent"><span>Trainer</span><small>stats + advice</small><span class="chevron">⌄</span></button>
+            <div class="sectionContent collapsed" id="trainerSettingsContent">
+              <p class="smallHelp">The trainer studies your actual choices over time and updates automatically.</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+                <button class="trainerBtn" id="explainLastBtn">Explain Last Turn</button>
+              </div>
+              <div class="trainerReport" id="trainerReport"><div class="trainerCard"><h4>Needs data</h4><p>Play a few turns and check back.</p></div></div>
             </div>
-            <div class="trainerReport" id="trainerReport"><div class="trainerCard"><h4>Needs data</h4><p>Play a few turns and check back.</p></div></div>
+          </div>
+        </section>
+
+        <section class="subpage" id="logPage">
+          <div class="subTop"><button class="backBtn" data-back>‹</button><div class="subTitle">Game Log</div></div>
+          <div class="sectionBox">
+            <div class="modalBody menuLogEntries" id="menuLogEntries">
+              <div class="logEntry"><strong>No log yet</strong><p>Card plays, clears, and pickups will appear here.</p></div>
+            </div>
           </div>
         </section>
 
@@ -3265,6 +3305,7 @@
                         <option value="static">Static border</option>
                         <option value="racer" selected>Border racer</option>
                         <option value="rainbow">Rainbow racer</option>
+                        <option value="dual">Dual racers</option>
                       </select>
                     </div>
                     <div class="controlRow">
@@ -3273,6 +3314,18 @@
                         <option value="none" selected>None</option>
                         <option value="gold">Gold</option>
                         <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                        <option value="red">Red</option>
+                        <option value="purple">Purple</option>
+                        <option value="white">White</option>
+                        <option value="custom">Custom</option>
+                      </select>
+                    </div>
+                    <div class="controlRow">
+                      <label for="turnBorderPreset2">Second racer color</label>
+                      <select id="turnBorderPreset2">
+                        <option value="blue" selected>Blue</option>
+                        <option value="gold">Gold</option>
                         <option value="green">Green</option>
                         <option value="red">Red</option>
                         <option value="purple">Purple</option>
@@ -3338,23 +3391,12 @@
                   <button class="toggle" data-toggle="overplayCountSteps" aria-label="Toggle one-by-one pickup count"></button>
                 </div>
                 <div class="controlRow">
-                  <div>
-                    <div class="controlLabel">Center live pile card</div>
-                    <p class="smallHelp">Moves the live card to the middle, keeps older pile cards on the left, and lets SCORE or LOG appear on the right.</p>
-                  </div>
-                  <button class="toggle on" data-toggle="centerLivePile" aria-label="Toggle centered live pile card"></button>
-                </div>
-                <div class="controlRow">
                   <span class="controlLabel">Show suits</span>
                   <button class="toggle on" data-toggle="showSuits" aria-label="Toggle show suits"></button>
                 </div>
                 <div class="controlRow">
-                  <span class="controlLabel">Show hint</span>
-                  <button class="toggle on" data-toggle="showHint" aria-label="Toggle show hint"></button>
-                </div>
-                <div class="controlRow">
-                  <span class="controlLabel">Sound</span>
-                  <button class="toggle" data-toggle="sound" aria-label="Toggle sound"></button>
+                  <span class="controlLabel">Show hint button</span>
+                  <button class="toggle on" data-toggle="showHint" aria-label="Toggle show hint button"></button>
                 </div>
               </div>
             </div>
@@ -3377,17 +3419,15 @@
           </div>
           <div class="sectionBox">
             <h3>AI Difficulty</h3>
-            <div class="controlRow">
-              <label for="difficultySelect">Difficulty</label>
-              <select id="difficultySelect">
-                <option>Easy</option>
-                <option>Medium</option>
-                <option>Hard</option>
-                <option>Expert</option>
-                <option selected>Adaptive</option>
-                <option>Tries to lose</option>
-              </select>
-            </div>
+            <p class="smallHelp">Tap a difficulty to use it.</p>
+            <select id="difficultySelect" style="display:none" aria-hidden="true">
+              <option>Easy</option>
+              <option>Medium</option>
+              <option>Hard</option>
+              <option>Expert</option>
+              <option selected>Adaptive</option>
+              <option>Tries to lose</option>
+            </select>
             <div class="difficultyList" id="difficultyList"></div>
           </div>
         </section>
@@ -3409,17 +3449,21 @@
         <section class="subpage" id="rulesPage">
           <div class="subTop"><button class="backBtn" data-back>‹</button><div class="subTitle">Rules</div></div>
           <div class="sectionBox rulesText">
-            <h3>Readable rules</h3>
-            <h4>Table stacks and play order</h4>
-            <p>Each player has four table stacks. A face-down card sits underneath a face-up card and peeks out only enough to show that a hidden card exists. Hand cards and face-up table cards are always playable, and same-rank plays may combine hand and face-up cards. A face-down card becomes playable as soon as the face-up card on that specific stack is gone, even if other stacks still have face-up cards.</p>
-            <h4>Pile</h4>
-            <p>All plays go to one center pile. The live card is the active card, while older cards remain visible in the pile area or archive depending on your pile display setting.</p>
-            <h4>Multi-card plays</h4>
-            <p>A turn may play one card or multiple cards of the same rank when that play is legal.</p>
-            <h4>Special role of 10s</h4>
-            <p>10s are special clear/burn cards in this variant. AI behavior, hints, and animations should treat them differently from normal overplay cards.</p>
-            <h4>Exact cards</h4>
-            <p>When you choose a specific visible card, that exact card is played.</p>
+            <h4>Goal</h4>
+            <p>Try to be the first player to get rid of every card: your hand cards, your face-up table cards, and finally your face-down table cards.</p>
+            <h4>Taking a turn</h4>
+            <p>On your turn, play a card that is the same value as or lower than the live pile card. If the pile is empty, you can play anything.</p>
+            <p>You may play multiple cards of the same rank at once. If you tap a card and have more of that same rank, the game can either auto-play the copies or ask how many to play, depending on your settings.</p>
+            <h4>Your table cards</h4>
+            <p>Each table stack starts with a face-up card over a face-down card. You can play from your hand or from any face-up table card. A face-down card becomes available only after the face-up card above it is gone.</p>
+            <h4>Clearing the pile</h4>
+            <p>A 10 clears the pile immediately. Four or more cards of the same rank in a row also clear the pile. When you clear, the pile disappears and you keep the turn.</p>
+            <h4>Overplaying</h4>
+            <p>If you play a card that is higher than the live pile card, that is an overplay. You must pick up the pile, including the card or cards you just overplayed, and then you immediately make another play.</p>
+            <h4>Face-down flips</h4>
+            <p>When you flip a face-down card, it must be played. If it matches other visible cards you have, it can be combined with them the same way any normal play can.</p>
+            <h4>Scoring</h4>
+            <p>When someone goes out, everyone else scores points for the cards they still have. Lower score is better.</p>
           </div>
         </section>
       </div>
@@ -3501,7 +3545,7 @@
     const state = {
       aiCount: 4,
       difficulty: 'Adaptive',
-      appearance: { cardBack: 'classic', customCardBack: '#1e4e8c', felt: '#0a5a3c', feltDeep: '#084a33', turnBorderStyle: 'racer', turnBorderPreset: 'gold', turnBorderColor: '#f0ca68' },
+      appearance: { cardBack: 'classic', customCardBack: '#1e4e8c', felt: '#0a5a3c', feltDeep: '#084a33', turnBorderStyle: 'racer', turnBorderPreset: 'gold', turnBorderPreset2: 'blue', turnBorderColor: '#f0ca68' },
       selectedCardId: null,
       toggles: {
         autoPlay: true,
@@ -3512,8 +3556,7 @@
         pileInlineLog: false,
         pileInlineScores: true,
         showSuits: true,
-        showHint: true,
-        sound: false
+        showHint: true
       }
     };
 
@@ -3594,6 +3637,7 @@
       clearAnimation: document.getElementById('clearAnimation'),
       logModal: document.getElementById('logModal'),
       logEntries: document.getElementById('logEntries'),
+      menuLogEntries: document.getElementById('menuLogEntries'),
       choiceModal: document.getElementById('choiceModal'),
       choiceTitle: document.getElementById('choiceTitle'),
       choiceBody: document.getElementById('choiceBody'),
@@ -3601,6 +3645,7 @@
       toast: document.getElementById('toast'),
       pileAction: document.getElementById('pileAction'),
       quickLogBtn: document.getElementById('quickLogBtn'),
+      quickHintBtn: document.getElementById('quickHintBtn'),
       quickScoresBtn: document.getElementById('quickScoresBtn'),
       roundModal: document.getElementById('roundModal'),
       roundTitle: document.getElementById('roundTitle'),
@@ -3618,6 +3663,7 @@
       customFelt: document.getElementById('customFelt'),
       turnBorderStyle: document.getElementById('turnBorderStyle'),
       turnBorderPreset: document.getElementById('turnBorderPreset'),
+      turnBorderPreset2: document.getElementById('turnBorderPreset2'),
       turnBorderColor: document.getElementById('turnBorderColor'),
       resetTurnBorderColor: document.getElementById('resetTurnBorderColor'),
       turnBorderSummary: document.getElementById('turnBorderSummary')
@@ -3723,14 +3769,14 @@
         if (saved.customCardBack) setCustomCardBack(saved.customCardBack);
         if (saved.cardBack) setBack(saved.cardBack);
         if (saved.felt) setFelt(saved.felt, saved.feltDeep || makeDarkerColor(saved.felt));
-        setTurnBorderAppearance(saved.turnBorderStyle || state.appearance.turnBorderStyle, saved.turnBorderColor || state.appearance.turnBorderColor, saved.turnBorderPreset || state.appearance.turnBorderPreset);
+        setTurnBorderAppearance(saved.turnBorderStyle || state.appearance.turnBorderStyle, saved.turnBorderColor || state.appearance.turnBorderColor, saved.turnBorderPreset || state.appearance.turnBorderPreset, saved.turnBorderPreset2 || state.appearance.turnBorderPreset2);
       } catch (err) {
         if (el.difficultySelect) el.difficultySelect.value = state.difficulty;
       }
       if (!document.body.dataset.cardback) setBack(state.appearance.cardBack);
       setCustomCardBack(state.appearance.customCardBack);
       setFelt(state.appearance.felt, state.appearance.feltDeep);
-      setTurnBorderAppearance(state.appearance.turnBorderStyle, state.appearance.turnBorderColor);
+      setTurnBorderAppearance(state.appearance.turnBorderStyle, state.appearance.turnBorderColor, state.appearance.turnBorderPreset, state.appearance.turnBorderPreset2);
       if (state.toggles.pileInlineLog && state.toggles.pileInlineScores) state.toggles.pileInlineScores = false;
       syncToggleButtons();
     }
@@ -3753,6 +3799,7 @@
           feltDeep: state.appearance.feltDeep,
           turnBorderStyle: state.appearance.turnBorderStyle,
           turnBorderPreset: state.appearance.turnBorderPreset,
+          turnBorderPreset2: state.appearance.turnBorderPreset2,
           turnBorderColor: state.appearance.turnBorderColor
         }));
       } catch (err) {}
@@ -4001,7 +4048,7 @@
       game.pendingAiToHumanTurnReveal = false;
       game.lastRoundWinnerId = null;
       game.lastRoundSummaries = null;
-      state._lastOpponentHandCounts = {};
+      state._lastOpponentCardTotals = {};
       if (!newMatch && !rosterChanged) game.matchOver = false;
 
       const needed = playerCount * 19;
@@ -5345,13 +5392,9 @@
       if (el.roundModal) el.roundModal.classList.add('open');
     }
 
-    function renderLogModal() {
-      if (!el.logEntries) return;
-      if (!game.log.length) {
-        el.logEntries.innerHTML = `<div class="logEntry"><strong>No log yet</strong><p>Card plays, clears, and pickups will appear here.</p></div>`;
-        return;
-      }
-      el.logEntries.innerHTML = game.log.map(entry => {
+    function logEntriesHtml() {
+      if (!game.log.length) return `<div class="logEntry"><strong>No log yet</strong><p>Card plays, clears, and pickups will appear here.</p></div>`;
+      return game.log.map(entry => {
         const cards = entry.snapshotIds.map(id => {
           const card = game.cardsById[id];
           if (!card) return '';
@@ -5360,7 +5403,18 @@
         }).join('');
         return `<div class="logEntry"><strong>${escapeHtml(entry.title)}</strong><p>${escapeHtml(entry.text)}</p>${cards ? `<div class="logSnapshotGrid">${cards}</div>` : ''}</div>`;
       }).join('');
+    }
+
+    function renderLogModal() {
+      if (!el.logEntries) return;
+      el.logEntries.innerHTML = logEntriesHtml();
       requestAnimationFrame(() => { el.logEntries.scrollTop = el.logEntries.scrollHeight; });
+    }
+
+    function renderMenuLog() {
+      if (!el.menuLogEntries) return;
+      el.menuLogEntries.innerHTML = logEntriesHtml();
+      requestAnimationFrame(() => { el.menuLogEntries.scrollTop = el.menuLogEntries.scrollHeight; });
     }
 
     function renderPileInlineLog() {
@@ -5708,8 +5762,9 @@
         }
         const isTurn = game.turn === player.id && game.roundActive;
         const handCount = player.hand.length;
-        const previousCount = state._lastOpponentHandCounts?.[player.id];
-        const showLastCardBadge = previousCount != null && previousCount > 1 && handCount === 1;
+        const totalRemaining = remainingCount(player);
+        const previousCount = state._lastOpponentCardTotals?.[player.id];
+        const showLastCardBadge = previousCount != null && previousCount > 1 && totalRemaining === 1;
         panel.className = `opponent ${i % 2 === 0 ? 'left' : 'right'}`;
         panel.dataset.playerId = player.id;
         panel.innerHTML = `<div class="oppName"><span class="oppNameText">${escapeHtml(player.name)}</span><span class="handPill">H: ${handCount}</span></div>${showLastCardBadge ? '<span class="lastCardWarning">LAST CARD</span>' : ''}<div class="oppStacks"></div>`;
@@ -5718,8 +5773,8 @@
         const stacks = panel.querySelector('.oppStacks');
         player.stacks.forEach((stack, stackIndex) => stacks.appendChild(createStackVisual(player, stack, stackIndex, false)));
         el.opponentsGrid.appendChild(panel);
-        if (!state._lastOpponentHandCounts) state._lastOpponentHandCounts = {};
-        state._lastOpponentHandCounts[player.id] = handCount;
+        if (!state._lastOpponentCardTotals) state._lastOpponentCardTotals = {};
+        state._lastOpponentCardTotals[player.id] = totalRemaining;
       }
     }
 
@@ -5806,9 +5861,10 @@
       const correctedTenArchive = sanitizePileAfterTen(game);
       if (correctedTenArchive) scheduleSaveGameProgress(40);
       const { archive, live } = splitPileLive();
-      const centeredLive = !!state.toggles.centerLivePile;
+      const centeredLive = true;
       if (el.pileLayout) el.pileLayout.classList.toggle('centerLive', centeredLive);
       if (el.pilePanel) el.pilePanel.classList.toggle('centerLiveMode', centeredLive);
+      if (el.quickHintBtn) el.quickHintBtn.classList.toggle('hidden', !state.toggles.showHint);
       if (el.pileGridLeft) {
         el.pileGridLeft.innerHTML = '';
         el.pileGridLeft.dataset.cardCount = 0;
@@ -5873,7 +5929,7 @@
 
     function renderDifficultyDescriptions() {
       el.difficultyList.innerHTML = Object.entries(difficultyDescriptions).map(([name, copy]) => (
-        `<div class="difficultyItem ${name === state.difficulty ? 'active' : ''}" data-difficulty-name="${name}"><strong>${name}</strong><p>${copy}</p></div>`
+        `<button type="button" class="difficultyItem ${name === state.difficulty ? 'active' : ''}" data-difficulty-name="${name}"><strong>${name}</strong><p>${copy}</p></button>`
       )).join('');
     }
 
@@ -5922,7 +5978,7 @@
       const archiveCount = leftCount + rightCount;
       const liveCount = Number(el.pileCurrentCard.dataset.liveCount || 0);
       const pileCount = archiveCount + liveCount;
-      const centeredLive = !!state.toggles.centerLivePile;
+      const centeredLive = true;
       const rect = el.pilePanel.getBoundingClientRect();
       const innerW = rect.width - 8;
       const innerH = rect.height - 8;
@@ -7124,6 +7180,28 @@
       }
     }
 
+    async function chooseHumanBlindOverplayExtras(rank, revealedId, expertBefore, beforeSim) {
+      const extraIds = allVisibleIdsOfRank(game, 0, rank);
+      if (!extraIds.length) return [];
+      if (state.toggles.autoPlay && !['A', '2', '10'].includes(rank)) return extraIds;
+
+      const ordered = choiceOrderedIds(rank, null, extraIds);
+      return new Promise(resolve => {
+        el.choiceTitle.textContent = 'Select overplay copies';
+        el.choiceBody.innerHTML = `<p class="smallHelp">The flipped ${escapeHtml(rank)} counts as 1. Choose the total number of ${escapeHtml(rank)}s to overplay.</p>`;
+        el.choiceActions.innerHTML = '';
+        el.choiceActions.classList.add('numberOnly');
+        for (let total = 1; total <= ordered.length + 1; total++) {
+          el.choiceActions.appendChild(actionButton(String(total), () => {
+            const extras = ordered.slice(0, total - 1);
+            closeChoice();
+            resolve(extras);
+          }, 'countChoice'));
+        }
+        el.choiceModal.classList.add('open');
+      });
+    }
+
     async function executeBlindMove(playerId, stackIndex, isAi = false, expertBefore = null, beforeSim = null) {
       const player = game.players[playerId];
       const stack = player.stacks[stackIndex];
@@ -7139,24 +7217,34 @@
       await animateBlindFlipCard(playerId, stackIndex, cardId, card, flipSource);
       const overplay = card.rank !== '10' && game.currentValue !== null && RVAL[card.rank] > game.currentValue;
       if (overplay) {
-        const snap = game.pile.slice().concat(cardId);
+        const extraIds = (!isAi && player.isHuman) ? await chooseHumanBlindOverplayExtras(card.rank, cardId, expertBefore, beforeSim) : [];
+        const allOverplayIds = [cardId, ...extraIds];
+        const extraSources = extraIds.length ? captureMoveSources(extraIds, playerId) : [];
+        const snap = game.pile.slice().concat(allOverplayIds);
         addLog(`${playerDoes(player, 'flip', 'flips')} ${card.rank}`, `Blind overplay. ${playerTakesPile(player)} and ${playerContinues(player).toLowerCase()}.`, snap);
-        showAction(`${playerDoes(player, 'flip', 'flips')} ${card.rank} — pickup`);
-        game.pile.push(cardId);
-        recomputeActive();
-        renderAll();
-        pulsePileOverplayWarning();
-        const badgePromise = flashOverplayText();
-        showAction(playerTakesPile(player));
-        const projectedPickupHandCount = player.hand.length + game.pile.length;
-        await animatePilePickup(game.pile.slice(), playerId, {}, projectedPickupHandCount);
-        await badgePromise;
-        player.hand.push(...game.pile);
-        player.hand = sortCardIds([...new Set(player.hand)]);
-        game.pile = [];
-        recomputeActive();
-        if (!isAi) finalizeTrainerMove(move, expertBefore, beforeSim || cloneSim());
-        renderAll();
+        showAction(`${playerDoes(player, 'flip', 'flips')} ${card.rank}${extraIds.length ? ` + ${extraIds.length}` : ''} — pickup`);
+        let releaseExtraSources = null;
+        try {
+          if (extraIds.length) releaseExtraSources = await animateOverplayToPile(extraIds, playerId, extraSources, { keepSourcesHidden: true });
+          removeSelectedCards(player, extraIds);
+          game.pile.push(...allOverplayIds);
+          recomputeActive();
+          renderAll();
+          pulsePileOverplayWarning();
+          const badgePromise = flashOverplayText();
+          showAction(playerTakesPile(player));
+          const projectedPickupHandCount = player.hand.length + game.pile.length;
+          await animatePilePickup(game.pile.slice(), playerId, {}, projectedPickupHandCount);
+          await badgePromise;
+          player.hand.push(...game.pile);
+          player.hand = sortCardIds([...new Set(player.hand)]);
+          game.pile = [];
+          recomputeActive();
+          if (!isAi) finalizeTrainerMove({ ...move, cardIds: allOverplayIds, count: allOverplayIds.length }, expertBefore, beforeSim || cloneSim());
+          renderAll();
+        } finally {
+          if (releaseExtraSources) releaseExtraSources();
+        }
         if (isAi) await sleep(Math.max(180, AI_STEP_MS * 0.45));
         if (checkRoundOver(playerId)) return;
         await continueSamePlayer(playerId);
@@ -7371,9 +7459,16 @@
       if (!el.trainerReport) return;
       const t = game.trainer;
       const expertPct = expertMatchPercent(t);
+      const roundsPlayed = Array.isArray(game.roundHistory) ? game.roundHistory.length : 0;
+      const humanOutFirst = roundsPlayed ? game.roundHistory.filter(r => r.winnerId === 0).length : 0;
+      const outPct = roundsPlayed ? Math.round((humanOutFirst / roundsPlayed) * 100) : null;
+      const difficultyNote = state.difficulty === 'Expert'
+        ? 'This is most meaningful because the AI is set to Expert.'
+        : `This is more meaningful on Expert difficulty. Current AI: ${escapeHtml(state.difficulty)}.`;
       const expertCard = `<div class="trainerCard"><h4>Expert match</h4><p>${expertPct === null ? 'No comparable turns yet.' : `${expertPct}% of your comparable plays have matched the Expert AI's first-choice play (${t.expertMatches}/${t.expertComparisons}).`}</p></div>`;
+      const outCard = `<div class="trainerCard"><h4>Going out first</h4><p>${outPct === null ? 'No completed rounds yet.' : `You have gone out first in ${outPct}% of completed rounds (${humanOutFirst}/${roundsPlayed}).`} ${difficultyNote}</p></div>`;
       if (t.turns < 5) {
-        el.trainerReport.innerHTML = `${expertCard}<div class="trainerCard"><h4>Needs more data</h4><p>I have seen ${t.turns} human turn${t.turns === 1 ? '' : 's'}. I need at least 5 turns before strategy advice is worth trusting.</p></div>`;
+        el.trainerReport.innerHTML = `${expertCard}${outCard}<div class="trainerCard"><h4>Needs more data</h4><p>I have seen ${t.turns} human turn${t.turns === 1 ? '' : 's'}. I need at least 5 turns before strategy advice is worth trusting.</p></div>`;
         if (force) animateTrainerCardsIn();
         return;
       }
@@ -7388,11 +7483,12 @@
       if (t.riskyBlindFlips >= 2) tips.push('Before blind flips, consider clearing or lowering pile risk. Blind flips into a low active value are dangerous.');
       if (t.missedHighPointThreatUnloads >= 1) tips.push('When an opponent is close to going out, shift into point-unload mode. Tens and face cards matter a lot because they score heavily against you.');
       if (t.missedEndgameStoppers >= 1) tips.push('When the next player is one card from going out and you are holding a lot of points, consider a low stopper play like A, 2, or 3 instead of giving them a high/fresh opening.');
-      if (!strengths.length) strengths.push('I am still looking for a clear strength pattern. Keep playing.');
+      if (!strengths.length) strengths.push(t.turns >= 25 ? 'You have enough turns logged for the trainer to track your habits. Your strongest pattern right now is avoiding obvious disasters more often than creating them; the next step is cleaner point-unloading and clear timing.' : 'I am still looking for a clear strength pattern. Keep playing.');
       if (!tips.length) tips.push('No major leaks detected yet. Try comparing your choices to the Expert hint when a turn looks complicated.');
       const recent = t.recent[0];
       el.trainerReport.innerHTML = `
         ${expertCard}
+        ${outCard}
         <div class="trainerCard"><h4>Current read</h4><p>${t.turns} turns analyzed. ${tips[0]}</p></div>
         <div class="trainerCard"><h4>Strengths</h4><ul>${strengths.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
         <div class="trainerCard"><h4>Things to try</h4><ul>${tips.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
@@ -7432,6 +7528,7 @@
       el.drawerHome.classList.remove('active');
       document.querySelectorAll('.subpage').forEach(page => page.classList.toggle('active', page.id === pageId));
       if (pageId === 'hintPage') renderTrainerReport(true);
+      if (pageId === 'logPage') renderMenuLog();
     }
 
     function showHome() {
@@ -7503,6 +7600,7 @@
 
     function normalizeTurnBorderStyle(style) {
       if (style === 'rainbow') return 'rainbow';
+      if (style === 'dual') return 'dual';
       if (style === 'static') return 'static';
       if (style === 'racer') return 'racer';
       if (['gold', 'blue', 'green', 'red', 'purple', 'white'].includes(style)) return 'racer';
@@ -7517,21 +7615,41 @@
       return turnBorderPresetColor(state.appearance.turnBorderPreset || 'none');
     }
 
+    function turnBorderSecondColor() {
+      const preset = state.appearance.turnBorderPreset2 || 'blue';
+      if (preset === 'custom') return /^#[0-9a-fA-F]{6}$/.test(String(state.appearance.turnBorderColor || '')) ? state.appearance.turnBorderColor : '#4bd9ff';
+      return turnBorderPresetColor(preset) || '#4bd9ff';
+    }
+
+    function mixHexColors(a, b) {
+      const parse = value => {
+        const hex = String(value || '').replace('#', '');
+        if (!/^[0-9a-fA-F]{6}$/.test(hex)) return [240, 202, 104];
+        return [0, 2, 4].map(i => parseInt(hex.slice(i, i + 2), 16));
+      };
+      const [ar, ag, ab] = parse(a);
+      const [br, bg, bb] = parse(b);
+      const mixed = [Math.round((ar + br) / 2), Math.round((ag + bg) / 2), Math.round((ab + bb) / 2)];
+      return `#${mixed.map(v => v.toString(16).padStart(2, '0')).join('')}`;
+    }
+
     function syncTurnBorderColorControls() {
       if (el.turnBorderStyle) el.turnBorderStyle.value = state.appearance.turnBorderStyle;
       if (el.turnBorderPreset) el.turnBorderPreset.value = state.appearance.turnBorderPreset || 'none';
+      if (el.turnBorderPreset2) el.turnBorderPreset2.value = state.appearance.turnBorderPreset2 || 'blue';
       if (el.turnBorderColor) el.turnBorderColor.value = state.appearance.turnBorderColor || '#f0ca68';
       if (el.turnBorderSummary) {
-        const styleLabels = { none: 'None', static: 'Static', racer: 'Racer', rainbow: 'Rainbow' };
+        const styleLabels = { none: 'None', static: 'Static', racer: 'Racer', rainbow: 'Rainbow', dual: 'Dual' };
         const presetLabels = { none: 'No border', gold: 'Gold', blue: 'Blue', green: 'Green', red: 'Red', purple: 'Purple', white: 'White', custom: 'Custom' };
         const style = state.appearance.turnBorderStyle || 'none';
         el.turnBorderSummary.textContent = style === 'none' ? 'None' : `${styleLabels[style] || 'Racer'} · ${style === 'rainbow' ? 'Rainbow' : (presetLabels[state.appearance.turnBorderPreset] || 'Gold')}`;
       }
     }
 
-    function setTurnBorderAppearance(style = state.appearance.turnBorderStyle, color = state.appearance.turnBorderColor, preset = state.appearance.turnBorderPreset) {
+    function setTurnBorderAppearance(style = state.appearance.turnBorderStyle, color = state.appearance.turnBorderColor, preset = state.appearance.turnBorderPreset, preset2 = state.appearance.turnBorderPreset2) {
       const normalizedStyle = normalizeTurnBorderStyle(style);
       let nextPreset = ['none', 'gold', 'blue', 'green', 'red', 'purple', 'white', 'custom'].includes(preset) ? preset : 'none';
+      const nextPreset2 = ['gold', 'blue', 'green', 'red', 'purple', 'white', 'custom'].includes(preset2) ? preset2 : 'blue';
 
       // Migrate old saved values like "blue" or "green" from the old racer dropdown.
       if (['gold', 'blue', 'green', 'red', 'purple', 'white'].includes(style)) {
@@ -7541,6 +7659,7 @@
       const nextColor = /^#[0-9a-fA-F]{6}$/.test(String(color || '')) ? color : '#f0ca68';
       state.appearance.turnBorderStyle = normalizedStyle;
       state.appearance.turnBorderPreset = nextPreset;
+      state.appearance.turnBorderPreset2 = nextPreset2;
       state.appearance.turnBorderColor = nextColor;
 
       const activeColor = turnBorderColorForStyle(normalizedStyle);
@@ -7601,6 +7720,9 @@
       overlay.style.setProperty('--racer-color', turnBorderColorForStyle(style));
       overlay.classList.toggle('static', style === 'static');
       overlay.classList.toggle('rainbow', style === 'rainbow');
+      overlay.classList.toggle('dual', style === 'dual');
+      overlay.style.setProperty('--racer-color-2', turnBorderSecondColor());
+      overlay.style.setProperty('--racer-mix-color', mixHexColors(turnBorderColorForStyle(style), turnBorderSecondColor()));
       overlay.dataset.targetKey = targetKey;
 
       if (changedTarget || forceInstant) {
@@ -7713,10 +7835,8 @@
 
         if (shouldAct) {
           if (activeSubpage) {
-            zone.style.transition = 'transform 165ms ease';
-            zone.style.transform = 'translateX(0)';
             showHome();
-            resetSwipeStyles(175);
+            resetSwipeStyles(0);
           } else {
             const momentumMs = Math.max(105, Math.min(210, 190 - velocity * 120));
             zone.style.transition = `transform ${momentumMs}ms cubic-bezier(.16,.78,.18,1)`;
@@ -7764,10 +7884,17 @@
           if (absDx < 7) return;
           if (dx <= 0 || absDx < absDy * 1.05) return;
           dragging = true;
-          zone.classList.add('dragging');
-          zone.style.transition = 'none';
+          if (!document.querySelector('.subpage.active')) {
+            zone.classList.add('dragging');
+            zone.style.transition = 'none';
+          }
         }
         event.preventDefault();
+        const activeSubpage = document.querySelector('.subpage.active');
+        if (activeSubpage) {
+          lastDx = dx;
+          return;
+        }
         const maxDrag = Math.max(160, zone.getBoundingClientRect().width);
         const dragX = Math.max(0, Math.min(maxDrag, dx));
         lastDx = dragX;
@@ -7782,8 +7909,6 @@
       el.drawerTab.addEventListener('click', () => el.drawer.classList.toggle('open'));
       el.closeDrawer.addEventListener('click', () => el.drawer.classList.remove('open'));
       document.querySelectorAll('[data-page]').forEach(btn => btn.addEventListener('click', () => showPage(btn.dataset.page)));
-      const openLogMenuBtn = document.getElementById('openLogMenuBtn');
-      if (openLogMenuBtn) openLogMenuBtn.addEventListener('click', () => { renderLogModal(); el.logModal.classList.add('open'); });
       if (el.startNewGameMenuBtn) el.startNewGameMenuBtn.addEventListener('click', openNewGameConfirm);
       if (el.newGameCancelBtn) el.newGameCancelBtn.addEventListener('click', closeNewGameConfirm);
       if (el.newGameCancelX) el.newGameCancelX.addEventListener('click', closeNewGameConfirm);
@@ -7797,15 +7922,16 @@
       document.querySelectorAll('[data-felt]').forEach(btn => btn.addEventListener('click', () => { setFelt(btn.dataset.felt, btn.dataset.feltDeep || makeDarkerColor(btn.dataset.felt)); savePrefs(); }));
       if (el.customFelt) el.customFelt.addEventListener('input', event => { setFelt(event.target.value, makeDarkerColor(event.target.value)); savePrefs(); });
       if (el.customCardBack) el.customCardBack.addEventListener('input', event => { setCustomCardBack(event.target.value); setBack('custom-solid'); savePrefs(); });
-      if (el.turnBorderStyle) el.turnBorderStyle.addEventListener('change', event => { setTurnBorderAppearance(event.target.value, state.appearance.turnBorderColor, state.appearance.turnBorderPreset); savePrefs(); renderAll(); });
+      if (el.turnBorderStyle) el.turnBorderStyle.addEventListener('change', event => { setTurnBorderAppearance(event.target.value, state.appearance.turnBorderColor, state.appearance.turnBorderPreset, state.appearance.turnBorderPreset2); savePrefs(); renderAll(); });
       if (el.turnBorderPreset) el.turnBorderPreset.addEventListener('change', event => {
         const preset = event.target.value;
         const color = preset === 'custom' ? state.appearance.turnBorderColor : turnBorderPresetColor(preset);
-        setTurnBorderAppearance(state.appearance.turnBorderStyle, color, preset);
+        setTurnBorderAppearance(state.appearance.turnBorderStyle, color, preset, state.appearance.turnBorderPreset2);
         savePrefs();
         renderAll();
       });
-      if (el.turnBorderColor) el.turnBorderColor.addEventListener('input', event => { setTurnBorderAppearance(state.appearance.turnBorderStyle, event.target.value, 'custom'); savePrefs(); renderAll(); });
+      if (el.turnBorderPreset2) el.turnBorderPreset2.addEventListener('change', event => { setTurnBorderAppearance(state.appearance.turnBorderStyle, state.appearance.turnBorderColor, state.appearance.turnBorderPreset, event.target.value); savePrefs(); renderAll(); });
+      if (el.turnBorderColor) el.turnBorderColor.addEventListener('input', event => { setTurnBorderAppearance(state.appearance.turnBorderStyle, event.target.value, 'custom', state.appearance.turnBorderPreset2); savePrefs(); renderAll(); });
       if (el.resetTurnBorderColor) el.resetTurnBorderColor.addEventListener('click', () => { setTurnBorderAppearance(state.appearance.turnBorderStyle, '#f0ca68', 'none'); savePrefs(); renderAll(); });
 
       document.querySelectorAll('.toggle').forEach(btn => {
@@ -7814,9 +7940,7 @@
           state.toggles[key] = !state.toggles[key];
           btn.classList.toggle('on', state.toggles[key]);
           if (key === 'showSuits') document.body.classList.toggle('hide-suits', !state.toggles[key]);
-          if (key === 'showHint') document.getElementById('hintCopy').textContent = state.toggles[key]
-            ? 'Hints use the Expert planner on a cloned board state. They explain the recommendation without making a play.'
-            : 'Hints are hidden from the main menu, but Trainer remains available here.';
+          if (key === 'showHint') document.getElementById('hintCopy').textContent = 'Hints use the Expert planner on a cloned board state. They explain the recommendation without making a play.';
           if (key === 'centerLivePile' && !state.toggles.centerLivePile) {
             state.toggles.pileInlineLog = false;
             state.toggles.pileInlineScores = true;
@@ -7850,6 +7974,18 @@
         if (next) state.toggles.pileInlineLog = false;
         savePrefs();
         renderAll();
+      });
+      if (el.quickHintBtn) el.quickHintBtn.addEventListener('click', () => {
+        el.drawer.classList.add('open');
+        showPage('hintPage');
+      });
+      if (el.difficultyList) el.difficultyList.addEventListener('click', event => {
+        const item = event.target.closest('[data-difficulty-name]');
+        if (!item) return;
+        state.difficulty = item.dataset.difficultyName;
+        if (el.difficultySelect) el.difficultySelect.value = state.difficulty;
+        savePrefs();
+        renderDifficultyDescriptions();
       });
       document.getElementById('closeLog').addEventListener('click', () => el.logModal.classList.remove('open'));
       el.logModal.addEventListener('click', event => { if (event.target === el.logModal) el.logModal.classList.remove('open'); });
