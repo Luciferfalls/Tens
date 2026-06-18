@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Tens Mobile Wired v104</title>
+  <title>Tens Mobile Wired v105</title>
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#0a5a3c" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -931,6 +931,11 @@
       overflow-y: auto;
       overscroll-behavior: contain;
       padding: 9px 10px 14px;
+      position: relative;
+    }
+
+    .drawerContent.subpageSwipeMode {
+      overflow: hidden;
     }
 
     .drawerMenu {
@@ -967,6 +972,26 @@
 
     .drawerHome:not(.active) {
       display: none;
+    }
+
+    .drawerHome.swipeReveal {
+      display: block !important;
+      position: absolute;
+      inset: 9px 10px 14px;
+      z-index: 1;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .subpage.subSwipeActive {
+      display: block;
+      position: relative;
+      z-index: 2;
+      min-height: calc(100dvh - 82px - var(--safe-top) - var(--safe-bottom));
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(20, 31, 39, 0.995), rgba(6, 10, 13, 0.995));
+      box-shadow: -10px 0 24px rgba(0,0,0,0.38);
+      will-change: transform;
     }
 
     .subTop {
@@ -7464,11 +7489,17 @@
       const roundsPlayed = Array.isArray(game.roundHistory) ? game.roundHistory.length : 0;
       const humanOutFirst = roundsPlayed ? game.roundHistory.filter(r => r.winnerId === 0).length : 0;
       const outPct = roundsPlayed ? Math.round((humanOutFirst / roundsPlayed) * 100) : null;
-      const difficultyNote = state.difficulty === 'Expert'
-        ? 'This is most meaningful because the AI is set to Expert.'
-        : `This is more meaningful on Expert difficulty. Current AI: ${escapeHtml(state.difficulty)}.`;
-      const expertCard = `<div class="trainerCard"><h4>Expert match</h4><p>${expertPct === null ? 'No comparable turns yet.' : `${expertPct}% of your comparable plays have matched the Expert AI's first-choice play (${t.expertMatches}/${t.expertComparisons}).`}</p></div>`;
-      const outCard = `<div class="trainerCard"><h4>Going out first</h4><p>${outPct === null ? 'No completed rounds yet.' : `You have gone out first in ${outPct}% of completed rounds (${humanOutFirst}/${roundsPlayed}).`} ${difficultyNote}</p></div>`;
+      const expertLine = expertPct === null
+        ? 'No comparable turns yet.'
+        : `${expertPct}% of your comparable plays matched the Expert planner's first-choice play (${t.expertMatches}/${t.expertComparisons}).`;
+      const outLine = outPct === null
+        ? 'No completed rounds yet.'
+        : `You went out first in ${outPct}% of completed rounds (${humanOutFirst}/${roundsPlayed}).`;
+      const comparisonLine = expertPct === null || outPct === null
+        ? 'Play more comparable turns and finish more rounds to connect choices with outcomes.'
+        : 'Expert match tracks play-by-play decision alignment; going out first tracks whether those choices are turning into round wins.';
+      const expertCard = `<div class="trainerCard"><h4>Expert comparison</h4><p><strong>Expert match:</strong> ${expertLine}<br><strong>Went out first:</strong> ${outLine}<br>${comparisonLine}</p></div>`;
+      const outCard = '';
       if (t.turns < 5) {
         el.trainerReport.innerHTML = `${expertCard}${outCard}<div class="trainerCard"><h4>Needs more data</h4><p>I have seen ${t.turns} human turn${t.turns === 1 ? '' : 's'}. I need at least 5 turns before strategy advice is worth trusting.</p></div>`;
         if (force) animateTrainerCardsIn();
@@ -7812,10 +7843,16 @@
       let startTime = 0;
       let dragging = false;
       let lastDx = 0;
+      let swipeSubpage = null;
       const zone = el.drawer;
+      const drawerContent = document.querySelector('.drawerContent');
       if (!zone) return;
 
-      function resetSwipeStyles(delay = 170) {
+      function activeSubpage() {
+        return document.querySelector('.subpage.active');
+      }
+
+      function resetMainDrawerSwipe(delay = 170) {
         window.setTimeout(() => {
           zone.classList.remove('dragging');
           zone.style.transition = '';
@@ -7824,33 +7861,116 @@
         }, delay);
       }
 
+      function prepSubpageSwipe(page) {
+        if (!page || swipeSubpage === page) return;
+        swipeSubpage = page;
+        if (drawerContent) drawerContent.classList.add('subpageSwipeMode');
+        if (el.drawerHome) {
+          el.drawerHome.classList.add('swipeReveal');
+          el.drawerHome.style.transition = 'none';
+          el.drawerHome.style.transform = 'translateX(-24px)';
+          el.drawerHome.style.opacity = '0.82';
+        }
+        page.classList.add('subSwipeActive');
+        page.style.transition = 'none';
+        page.style.transform = 'translateX(0px)';
+      }
+
+      function updateSubpageSwipe(dx) {
+        if (!swipeSubpage) return 0;
+        const width = Math.max(180, zone.getBoundingClientRect().width);
+        const dragX = Math.max(0, Math.min(width, dx));
+        const progress = Math.min(1, dragX / width);
+        swipeSubpage.style.transform = `translateX(${dragX}px)`;
+        if (el.drawerHome) {
+          el.drawerHome.style.transform = `translateX(${Math.round(-24 + 24 * progress)}px)`;
+          el.drawerHome.style.opacity = String(0.82 + 0.18 * progress);
+        }
+        lastDx = dragX;
+        return dragX;
+      }
+
+      function cleanupSubpageSwipe(delay = 0) {
+        window.setTimeout(() => {
+          if (drawerContent) drawerContent.classList.remove('subpageSwipeMode');
+          if (el.drawerHome) {
+            el.drawerHome.classList.remove('swipeReveal');
+            el.drawerHome.style.transition = '';
+            el.drawerHome.style.transform = '';
+            el.drawerHome.style.opacity = '';
+          }
+          document.querySelectorAll('.subpage.subSwipeActive').forEach(page => {
+            page.classList.remove('subSwipeActive');
+            page.style.transition = '';
+            page.style.transform = '';
+          });
+          swipeSubpage = null;
+        }, delay);
+      }
+
+      function completeSubpageSwipe(page, velocity) {
+        if (!page) return;
+        const width = Math.max(180, zone.getBoundingClientRect().width);
+        const ms = Math.max(115, Math.min(220, 195 - velocity * 110));
+        page.style.transition = `transform ${ms}ms cubic-bezier(.16,.78,.18,1)`;
+        page.style.transform = `translateX(${width}px)`;
+        if (el.drawerHome) {
+          el.drawerHome.style.transition = `transform ${ms}ms cubic-bezier(.16,.78,.18,1), opacity ${ms}ms ease`;
+          el.drawerHome.style.transform = 'translateX(0px)';
+          el.drawerHome.style.opacity = '1';
+        }
+        window.setTimeout(() => {
+          showHome();
+          cleanupSubpageSwipe(0);
+        }, ms);
+      }
+
+      function cancelSubpageSwipe(page, velocity) {
+        if (!page) return;
+        const ms = Math.max(120, Math.min(220, 185 - Math.abs(velocity) * 70));
+        page.style.transition = `transform ${ms}ms cubic-bezier(.16,.78,.18,1)`;
+        page.style.transform = 'translateX(0px)';
+        if (el.drawerHome) {
+          el.drawerHome.style.transition = `transform ${ms}ms cubic-bezier(.16,.78,.18,1), opacity ${ms}ms ease`;
+          el.drawerHome.style.transform = 'translateX(-24px)';
+          el.drawerHome.style.opacity = '0.82';
+        }
+        cleanupSubpageSwipe(ms + 10);
+      }
+
       function finishSwipe(event) {
         if (!startX) return;
         const touch = (event.changedTouches && event.changedTouches[0]) || null;
         const dx = touch ? touch.clientX - startX : lastDx;
         const elapsed = Math.max(1, performance.now() - startTime);
         const velocity = dx / elapsed;
-        const activeSubpage = document.querySelector('.subpage.active');
+        const page = swipeSubpage || activeSubpage();
         const shouldAct = dragging && dx > 0 && (dx > 74 || velocity > 0.46);
 
         if (shouldAct) {
-          if (activeSubpage) {
-            showHome();
-            resetSwipeStyles(0);
+          if (page) {
+            completeSubpageSwipe(page, velocity);
           } else {
             const momentumMs = Math.max(105, Math.min(210, 190 - velocity * 120));
             zone.style.transition = `transform ${momentumMs}ms cubic-bezier(.16,.78,.18,1)`;
             zone.style.transform = 'translateX(100%)';
             window.setTimeout(() => {
               zone.classList.remove('open');
-              resetSwipeStyles(0);
+              resetMainDrawerSwipe(0);
             }, momentumMs);
           }
         } else if (dragging) {
-          const snapBackMs = Math.max(120, Math.min(210, 185 - Math.abs(velocity) * 70));
-          zone.style.transition = `transform ${snapBackMs}ms cubic-bezier(.16,.78,.18,1)`;
-          zone.style.transform = 'translateX(0)';
-          resetSwipeStyles(snapBackMs + 10);
+          if (page) {
+            cancelSubpageSwipe(page, velocity);
+          } else {
+            const snapBackMs = Math.max(120, Math.min(210, 185 - Math.abs(velocity) * 70));
+            zone.style.transition = `transform ${snapBackMs}ms cubic-bezier(.16,.78,.18,1)`;
+            zone.style.transform = 'translateX(0)';
+            resetMainDrawerSwipe(snapBackMs + 10);
+          }
+        } else {
+          cleanupSubpageSwipe(0);
+          resetMainDrawerSwipe(0);
         }
 
         startX = 0;
@@ -7884,15 +8004,17 @@
           if (absDx < 7) return;
           if (dx <= 0 || absDx < absDy * 1.05) return;
           dragging = true;
-          if (!document.querySelector('.subpage.active')) {
+          const page = activeSubpage();
+          if (page) {
+            prepSubpageSwipe(page);
+          } else {
             zone.classList.add('dragging');
             zone.style.transition = 'none';
           }
         }
         event.preventDefault();
-        const activeSubpage = document.querySelector('.subpage.active');
-        if (activeSubpage) {
-          lastDx = dx;
+        if (swipeSubpage) {
+          updateSubpageSwipe(dx);
           return;
         }
         const maxDrag = Math.max(160, zone.getBoundingClientRect().width);
