@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Tens Mobile Wired v100</title>
+  <title>Tens Mobile Wired v101</title>
     <link rel="manifest" href="manifest.webmanifest" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#0a5a3c" />
@@ -4985,78 +4985,80 @@
       if (!uniquePickupIds.length) return;
 
       const currentHandIds = player.hand.slice();
-      const finalHandIds = projectedHumanHandIdsAfterPickup(playerId, uniquePickupIds);
-      if (!finalHandIds.length) return;
-
-      const pickupSet = new Set(uniquePickupIds);
       const currentHandSet = new Set(currentHandIds);
+      const incomingIds = uniquePickupIds.filter(id => !currentHandSet.has(id));
+      if (!incomingIds.length) return;
+
+      // Do NOT hide or rebuild the whole hand during pickup. That was causing the
+      // player's entire hand to vanish on blind-flip overplays before the final render.
+      const finalHandIds = projectedHumanHandIdsAfterPickup(playerId, incomingIds);
+      applyHandLayoutForCount(finalHandIds.length);
+
       const sources = new Map();
       const sourceNodesToHide = [];
 
-      const captureNodeRect = (id, node) => {
-        if (!node || !node.getClientRects().length) return false;
-        const r = node.getBoundingClientRect();
-        sources.set(id, { id, left: r.left, top: r.top, width: r.width, height: r.height });
-        return true;
-      };
-
-      // Existing hand cards should slide apart into their new sorted slots.
-      currentHandIds.forEach(id => {
-        const node = findCardElements(id).find(n => n.dataset.zone === 'hand') || findCardElement(id);
-        captureNodeRect(id, node);
-      });
-
-      // Incoming pickup cards should fly from wherever they currently are: pile/table/etc.
-      uniquePickupIds.forEach((id, i) => {
-        if (sources.has(id) && currentHandSet.has(id)) return;
+      incomingIds.forEach((id, i) => {
         const provided = sourceRectsById && sourceRectsById[id];
         if (provided) {
           sources.set(id, { id, left: provided.left, top: provided.top, width: provided.width, height: provided.height });
-          return;
+        } else {
+          const node = findCardElements(id).find(n => n.dataset.zone !== 'hand') || findCardElement(id);
+          if (node && node.getClientRects().length) {
+            const r = node.getBoundingClientRect();
+            sources.set(id, { id, left: r.left, top: r.top, width: r.width, height: r.height });
+          } else {
+            sources.set(id, { id, ...pileCenterRectForCard(i) });
+          }
         }
-        const node = findCardElements(id).find(n => n.dataset.zone !== 'hand') || findCardElement(id);
-        if (!captureNodeRect(id, node)) sources.set(id, { id, ...pileCenterRectForCard(i) });
-      });
 
-      // Hide all originals while the motion sprites become the visible cards.
-      [...new Set([...currentHandIds, ...uniquePickupIds])].forEach(id => {
+        // Only hide the incoming pile/table cards. Leave existing hand cards visible.
         findCardElements(id).forEach(node => {
-          if (!node.classList.contains('clearSourceHidden')) {
+          if (node.dataset.zone !== 'hand' && !node.classList.contains('clearSourceHidden')) {
             node.classList.add('clearSourceHidden');
             sourceNodesToHide.push(node);
           }
         });
       });
 
+      await new Promise(resolve => requestAnimationFrame(resolve));
+
+      const handRect = el.handGrid.getBoundingClientRect();
+      const fallbackRect = el.handPanel.getBoundingClientRect();
+      const cols = finalHandIds.length <= 12 ? 6 : 8;
+      const cardW = parseFloat(getComputedStyle(el.handGrid).getPropertyValue('--hand-card-w')) || Math.max(24, Math.min(42, fallbackRect.width / cols));
+      const cardH = parseFloat(getComputedStyle(el.handGrid).getPropertyValue('--hand-card-h')) || cardW * CARD_RATIO;
+      const gap = 3;
+      const baseLeft = (handRect.width ? handRect.left : fallbackRect.left + 6);
+      const baseTop = (handRect.height ? handRect.top : fallbackRect.top + 6);
+
+      const targetFor = (id, fallbackIndex) => {
+        const finalIndex = Math.max(0, finalHandIds.indexOf(id));
+        const visibleIndex = finalIndex >= 0 ? finalIndex : currentHandIds.length + fallbackIndex;
+        const col = visibleIndex % cols;
+        const row = Math.min(1, Math.floor(visibleIndex / cols));
+        return {
+          left: baseLeft + col * (cardW + gap),
+          top: baseTop + row * (cardH + gap),
+          width: cardW,
+          height: cardH
+        };
+      };
+
       const sprites = [];
       try {
-        renderHiddenHandPreview(finalHandIds);
-        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-        applyHandLayoutForCount(finalHandIds.length);
-
-        const targets = new Map();
-        finalHandIds.forEach(id => {
-          const node = Array.from(el.handGrid.querySelectorAll(`[data-card-id="${id}"][data-zone="hand-preview"]`))[0];
-          if (!node || !node.getClientRects().length) return;
-          const r = node.getBoundingClientRect();
-          targets.set(id, { left: r.left, top: r.top, width: r.width, height: r.height });
-        });
-
-        const animations = finalHandIds.map((id, index) => {
-          const src = sources.get(id) || { id, ...playerSourceRect(playerId) };
-          const target = targets.get(id);
-          if (!target) return Promise.resolve();
+        const animations = incomingIds.map((id, i) => {
+          const src = sources.get(id) || { id, ...pileCenterRectForCard(i) };
+          const target = targetFor(id, i);
           const sprite = buildMotionSprite(id, src);
           if (!sprite) return Promise.resolve();
-          sprite.style.zIndex = pickupSet.has(id) ? '44' : '40';
+          sprite.style.zIndex = '44';
           sprite.style.filter = 'none';
           attachMotionSprite(sprite);
           sprites.push(sprite);
-          const incoming = pickupSet.has(id) && !currentHandSet.has(id);
           return animateArchiveSpriteToTarget(sprite, src, target, {
-            delay: incoming ? Math.min(80, index * 9) : 0,
-            duration: incoming ? 560 + Math.min(90, uniquePickupIds.length * 10) : 470,
-            drift: incoming ? -16 - Math.min(12, uniquePickupIds.length * 1.5) : 0,
+            delay: Math.min(45, i * 7),
+            duration: 390 + Math.min(70, incomingIds.length * 6),
+            drift: -12 - Math.min(10, incomingIds.length),
             snappyLanding: true
           });
         });
@@ -5064,8 +5066,8 @@
         await Promise.all(animations);
       } finally {
         sprites.forEach(sprite => { if (sprite) sprite.remove(); });
-        // The caller mutates state and renders the real hand immediately after this.
-        // Do not unhide the old sources here, or the old pile/hand will flash back for a frame.
+        // Keep incoming source nodes hidden until the caller mutates state and renders.
+        // Existing hand cards were never hidden, so the hand cannot disappear here.
       }
     }
 
